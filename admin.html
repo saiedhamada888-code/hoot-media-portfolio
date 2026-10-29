@@ -96,7 +96,6 @@ const set = (o, p, v) => { const ks = p.split("."); const last = ks.pop(); const
 /* ===== تعريف الأقسام ===== */
 const TEXTS = [["cta", "زرار الهيرو"], ["toolsTitle", "عنوان كارت المنصات (HTML)"], ["projectsTitle", "عنوان فولدر أعمالنا"], ["projectsSub", "وصف فولدر أعمالنا"], ["projectsInside", "عنوان جوه فولدر أعمالنا"],
   ["clientsTab", "لسان فولدر العملاء"], ["clientsWord", "كلمة «عميل» جنب العدد"], ["clientsSub", "وصف فولدر العملاء"],
-  ["briefTab", "لسان فولدر الاستشارة"], ["briefTitle", "عنوان فولدر الاستشارة"], ["briefSub", "وصف فولدر الاستشارة"], ["briefInside", "عنوان جوه فولدر الاستشارة"], ["briefSend", "نص زرار الواتساب جواه"],
   ["whatQ1", "«هنعمل إيه؟»"], ["whatQ2", "«وإزاي؟»"], ["whyL1", "«ليه نضيّع» (سطر ١)"], ["whyL2", "«وقت» (سطر ٢)"],
   ["contactA", "عنوان الاتصال — الجزء الأول"], ["contactB", "عنوان الاتصال — الجزء الملوّن"], ["contactSub", "الجملة تحت العنوان"],
   ["fName", "حقل الاسم"], ["fMail", "حقل الإيميل"], ["fIdea", "حقل الفكرة"], ["fBtn", "زرار الإرسال"], ["fNote", "الملحوظة تحت الزرار"], ["footer", "نص الفوتر"]];
@@ -120,7 +119,6 @@ const SECTIONS = [
   { id: "projects", title: "📁 أعمالنا", goto: "#projects", hint: "الكروت اللي بتظهر لما العميل يفتح فولدر أعمالنا. اللينك لو اتحط بيبقى الكارت قابل للضغط.",
     list: "projects", fields: [{ k: "name", label: "اسم الشغل" }, { k: "type", label: "النوع (مطعم، جيم...)" }, { k: "g", label: "ألوان الكارت (CSS gradient)", ltr: true, swatch: true }, { k: "link", label: "لينك (اختياري)", ltr: true }], blank: { name: "شغل جديد", type: "نوع", g: "linear-gradient(140deg,#00d4ff,#ff2e93)", link: "#" }, name: (o) => o.name },
   { id: "brands", title: "🤝 العملاء", goto: "#clients", hint: "البراندات اللي بتظهر لما يفتح فولدر العملاء.", list: "brands", prim: true, blank: "براند جديد" },
-  { id: "brief", title: "🧩 فولدر الاستشارة", goto: "#brief", hint: "الخيارات اللي العميل يختار منها وتتبعت على واتساب جاهزة.", list: "briefOptions", prim: true, blank: "خدمة جديدة" },
   { id: "team", title: "👥 الفريق", goto: "#team", hint: "كروت الأيقونات الـ3D.", list: "team", fields: [{ k: "icon", label: "الأيقونة (رمز/حرف)" }, { k: "title", label: "العنوان" }, { k: "text", label: "الوصف", type: "textarea" }, { k: "bg", label: "الخلفية (CSS gradient)", ltr: true, swatch: true }], blank: { icon: "★", title: "عنوان", text: "وصف", bg: "linear-gradient(160deg,#3ee6ff,#0058a3)" }, name: (o) => o.title },
   { id: "band", title: "🎞️ الشريط المتحرك", goto: "#team", hint: "الكلمات اللي بتجري في الشريط.", list: "band", prim: true, blank: "كلمة" },
   { id: "services", title: "🛠️ الخدمات", goto: "#services", hint: "قائمة الخدمات. التاجات بتتكتب مفصولة بفاصلة.",

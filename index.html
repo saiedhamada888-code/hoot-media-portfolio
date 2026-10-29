@@ -141,6 +141,7 @@
   .cta i { width: 30px; height: 30px; border-radius: 50%; background: var(--grad); color: #fff; display: grid; place-items: center; font-style: normal; }
 
   /* ================= Bento ================= */
+  .bento .gfolder:last-child { grid-column: 1 / -1; }
   .bento { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
   .tile { position: relative; border-radius: 24px; min-height: 340px; overflow: hidden; }
   .tools-tile { background: radial-gradient(80% 80% at 0% 100%, rgba(255,46,147,.18), transparent 60%), radial-gradient(70% 70% at 100% 0%, rgba(0,212,255,.14), transparent 60%), #0a1022; color: #fff; padding: 22px; display: flex; flex-direction: column; justify-content: flex-end; }
@@ -394,10 +395,6 @@ const DATA = (() => {
       <div class="inside" id="insideClients"></div>
       <div class="front" id="clientsFront" data-tab="براندات وثقت فينا"><div class="spec"></div><h3><span id="clientsN" class="grad-text">0</span><span class="grad-text">+</span> <span data-t="clientsWord">عميل</span></h3><p data-t="clientsSub">دوس وشوف مين اشتغلنا معاهم.</p></div>
     </div>
-    <div class="tile gfolder" id="brief" tabindex="0" role="button" aria-expanded="false" aria-label="افتح استشارة مجانية">
-      <div class="inside" id="insideBrief"></div>
-      <div class="front" id="briefFront" data-tab="استشارة مجانية"><div class="spec"></div><h3 data-t="briefTitle">عندك براند؟</h3><p data-t="briefSub">اختار اللي محتاجه وابعتلنا فورًا.</p></div>
-    </div>
   </div>
 </div>
 
@@ -447,7 +444,7 @@ const ICON = slug => `https://cdn.jsdelivr.net/npm/simple-icons@13.21.0/icons/${
 
 /* ================= Fill data ================= */
 $$("[data-t]").forEach(el => { const v = DATA.texts[el.dataset.t]; if (v != null) el.innerHTML = v; });
-$("#clientsFront").dataset.tab = DATA.texts.clientsTab; $("#briefFront").dataset.tab = DATA.texts.briefTab;
+$("#clientsFront").dataset.tab = DATA.texts.clientsTab;
 document.title = `${DATA.brandName} — ${DATA.texts.toolsTitle.replace(/<[^>]+>/g, "")}`;
 $("#dockWa").href = `https://wa.me/${DATA.whatsapp}`;
 $("#yr").textContent = new Date().getFullYear();
@@ -467,7 +464,6 @@ $("#insideProjects").innerHTML = `<h4>${DATA.texts.projectsInside}</h4><div clas
   return `<${a ? "a" : "div"} class="pcard" style="--g:${p.g}" ${a ? `href="${p.link}" target="_blank" rel="noopener"` : ""}><b>${p.name}</b><small>${p.type}</small></${a ? "a" : "div"}>`;
 }).join("") + `</div>`;
 $("#insideClients").innerHTML = `<h4>${DATA.texts.clientsTab}</h4><div class="bchips">` + DATA.brands.map(b => `<span class="bchip"><i>${b[0]}</i>${b}</span>`).join("") + `</div>`;
-$("#insideBrief").innerHTML = `<h4>${DATA.texts.briefInside}</h4><div class="bchips">` + DATA.briefOptions.map(o => `<button class="opt" type="button">${o}</button>`).join("") + `</div><a class="send" id="briefSend" target="_blank" rel="noopener">${DATA.texts.briefSend}</a>`;
 
 $("#stmt").innerHTML = DATA.statement.map(([w, ico, col]) => {
   w = w.replace("{brand}", DATA.brandName);
@@ -804,17 +800,6 @@ folders.forEach(f => {
   front.addEventListener("click", toggle);
   f.addEventListener("keydown", e => { if (e.target === f && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggle(); } });
 });
-// فولدر "عندك براند؟": اختار الخدمات وابعتها على واتساب جاهزة
-(() => {
-  const opts = $$("#insideBrief .opt"), send = $("#briefSend");
-  const update = () => {
-    const picked = opts.filter(o => o.classList.contains("on")).map(o => o.textContent);
-    const msg = "أهلاً حوت الميديا 👋" + (picked.length ? " أنا محتاج: " + picked.join("، ") : " عايز أعرف أكتر عن خدماتكم");
-    send.href = `https://wa.me/${DATA.whatsapp}?text=${encodeURIComponent(msg)}`;
-  };
-  opts.forEach(o => o.addEventListener("click", () => { o.classList.toggle("on"); Sound.tick(); update(); }));
-  update();
-})();
 
 /* ================= Phone + Nokia ring ================= */
 const phone = $("#phone"), phoneLabel = $("#phoneLabel");

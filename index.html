@@ -114,17 +114,21 @@
     padding: .05em .08em .3em; margin-bottom: -.3em; line-height: 1.1; animation: shimmer 5s linear infinite;
   }
   @keyframes shimmer { to { background-position: -200% 0; } }
+  /* الصورة دايمًا في نص الهيرو بالظبط (flex مش transform، عشان ما تتزحزحش لما الصورة تتحمّل بعدين) */
   .portrait {
-    position: absolute; bottom: 0; left: 50%; width: max-content; height: 78%; z-index: 2;
+    position: absolute; bottom: 0; left: 0; right: 0; height: 78%; z-index: 2; display: flex; justify-content: center; pointer-events: none;
+    transform: translate(var(--px, 0px), var(--py, 0px));
+    filter: drop-shadow(0 0 40px rgba(0,212,255,.25)) drop-shadow(0 30px 40px rgba(0,0,0,.35));
+  }
+  .portrait .pw {
+    height: 100%; width: max-content; max-width: 100%;
     /* تلاشي الجسم من اليمين والشمال ومن تحت عشان ما يبانش القص */
     -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 22%, #000 78%, transparent 100%);
     -webkit-mask-composite: source-in;
     mask-image: linear-gradient(to bottom, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 22%, #000 78%, transparent 100%);
     mask-composite: intersect;
-    transform: translate(calc(-50% + var(--px, 0px)), var(--py, 0px));
-    filter: drop-shadow(0 0 40px rgba(0,212,255,.25)) drop-shadow(0 30px 40px rgba(0,0,0,.35));
   }
-  .portrait img { max-width: none; height: 100%; width: auto; object-fit: contain; }
+  .portrait img { max-width: none; height: 100%; width: auto; object-fit: contain; display: block; }
   .portrait .ph {
     height: 100%; aspect-ratio: 3/4; display: none; place-items: end center; padding-bottom: 30%;
     background: radial-gradient(circle at 50% 30%, rgba(255,255,255,.25) 0 18%, transparent 19%), radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.18) 0 45%, transparent 46%);
@@ -373,10 +377,10 @@ const DATA = (() => {
     <div class="splashflash" id="splashFlash" aria-hidden="true"></div>
     <canvas class="drops" id="drops" aria-hidden="true"></canvas>
     <h1 class="hero-name" id="heroName"><span class="n1"></span><span class="n2"></span></h1>
-    <div class="portrait" id="portrait">
+    <div class="portrait" id="portrait"><div class="pw">
       <img id="photo" alt="حوت الميديا" />
       <div class="ph">حط صورتك باسم<br/>photo.webp<br/>جنب الملف</div>
-    </div>
+    </div></div>
     <a href="#contact" class="cta mag"><span data-t="cta">ابدأ مع الحوت</span> <i>←</i></a>
   </section>
 
@@ -890,7 +894,7 @@ if (!reduced) {
     if (started) return; started = true;
     $("#hero").classList.add("go");
     gsap.from("#heroName > span > span", { yPercent: 120, opacity: 0, duration: 1.2, ease: "expo.out", stagger: 0.15, delay: .05 });
-    gsap.from("#portrait", { yPercent: 18, opacity: 0, duration: 1.5, ease: "expo.out", delay: .05 });
+    gsap.from("#portrait .pw", { yPercent: 18, opacity: 0, duration: 1.5, ease: "expo.out", delay: .05 });
     gsap.from(".cta", { y: 30, opacity: 0, duration: 1, delay: .6, ease: "expo.out" });
     const pass = () => dispatchEvent(new Event("whale-pass")); pass(); setInterval(pass, 32000);
   };

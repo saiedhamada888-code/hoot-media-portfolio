@@ -336,7 +336,6 @@
 </head>
 <body>
 
-<div class="loader" id="loader"><div class="in"><img src="logo.svg" alt="" /><div class="bar"><i></i></div></div></div>
 <div class="progress" id="progress"></div>
 <div class="glow" id="glow"></div>
 
@@ -867,17 +866,8 @@ const marks = [...qs.children];
 // عدّاد العملاء
 const countTo = (el, n) => { const o = { v: 0 }; gsap.to(o, { v: n, duration: 1.6, ease: "power2.out", onUpdate: () => el.textContent = Math.round(o.v) }); };
 
-// الـ loader: بيدخل لوحده من غير أي ضغطة
+// مفيش شاشة تحميل ولا زرار دخول: البرتفوليو بيشتغل على طول
 let startShow = () => {};
-if (reduced || ADMIN) $("#loader").remove(); else {
-  const l = gsap.timeline({ onComplete: () => $("#loader")?.remove() });
-  l.from("#loader img", { scale: .4, opacity: 0, duration: .6, ease: "back.out(2)" })
-   .to("#loader .bar i", { scaleX: 1, duration: .9, ease: "power2.inOut" }, "<.1")
-   .to("#loader .in", { scale: .8, opacity: 0, duration: .3 })
-   .to("#loader", { yPercent: -100, duration: .8, ease: "expo.inOut" }, "-=.1")
-   .call(() => startShow(), null, "-=.55");
-  setTimeout(() => { $("#loader")?.remove(); startShow(); }, 6000); // أمان
-}
 
 if (!reduced) {
   // الحوت يبدأ يعدّي بعد الـ loader، ونداءه المخيف مع كل عبور
@@ -899,9 +889,9 @@ if (!reduced) {
   startShow = () => {
     if (started) return; started = true;
     $("#hero").classList.add("go");
-    gsap.from("#heroName > span > span", { yPercent: 120, opacity: 0, duration: 1.2, ease: "expo.out", stagger: 0.15, delay: .5 });
-    gsap.from("#portrait", { yPercent: 18, opacity: 0, duration: 1.5, ease: "expo.out", delay: .5 });
-    gsap.from(".cta", { y: 30, opacity: 0, duration: 1, delay: 1.1, ease: "expo.out" });
+    gsap.from("#heroName > span > span", { yPercent: 120, opacity: 0, duration: 1.2, ease: "expo.out", stagger: 0.15, delay: .05 });
+    gsap.from("#portrait", { yPercent: 18, opacity: 0, duration: 1.5, ease: "expo.out", delay: .05 });
+    gsap.from(".cta", { y: 30, opacity: 0, duration: 1, delay: .6, ease: "expo.out" });
     const pass = () => dispatchEvent(new Event("whale-pass")); pass(); setInterval(pass, 32000);
   };
   // المتصفح مابيسمحش بصوت قبل أول ضغطة/لمسة، فأول ما تحصل الزمارة تشتغل فورًا والحوت يعدّي من الأول
@@ -983,7 +973,7 @@ if (!reduced) {
   ScrollTrigger.create({ trigger: "#contact", start: "top 55%", onEnter: autoRing });
 }
 document.fonts.ready.then(() => ScrollTrigger.refresh());
-if (ADMIN) startShow();
+startShow();
 if (ADMIN) addEventListener("message", e => { if (e.data && e.data.goto) { const el = document.querySelector(e.data.goto); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - 70, behavior: "smooth" }); } });
 </script>
 <script type="module">

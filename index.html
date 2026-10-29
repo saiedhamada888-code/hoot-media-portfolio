@@ -23,9 +23,10 @@
     --hero-b: #060b1d;
     --ease: cubic-bezier(.22, 1, .36, 1);
   }
+  html { overflow-x: clip; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   ::selection { background: var(--c2); color: #fff; }
-  body { font-family: "Cairo", sans-serif; background: var(--dark); color: var(--ink); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  body { font-family: "Cairo", sans-serif; background: var(--dark); color: var(--ink); overflow-x: clip; -webkit-font-smoothing: antialiased; }
   img { display: block; }
   .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
@@ -34,6 +35,8 @@
   .loader .in { display: grid; justify-items: center; gap: 22px; }
   .loader img { width: 96px; filter: drop-shadow(0 0 30px rgba(0,212,255,.45)); animation: bob 2.4s ease-in-out infinite; }
   .loader .bar { width: 160px; height: 3px; border-radius: 3px; background: rgba(255,255,255,.1); overflow: hidden; }
+  .loader .enter { opacity: 0; pointer-events: none; transform: translateY(10px); border: 0; cursor: pointer; font: 800 18px "Cairo", sans-serif; color: #fff; padding: 15px 34px; border-radius: 999px; background: var(--grad); box-shadow: 0 12px 40px rgba(255,46,147,.4); }
+  .loader .enter:hover { filter: brightness(1.1); }
   .loader .bar i { display: block; height: 100%; width: 100%; background: var(--grad); transform-origin: right; transform: scaleX(0); }
 
   .progress { position: fixed; top: 0; right: 0; left: 0; height: 3px; z-index: 300; background: var(--grad); transform-origin: right; transform: scaleX(0); pointer-events: none; }
@@ -220,7 +223,7 @@
   .card3d h3 { font-size: 24px; font-weight: 800; }
   .card3d p { color: var(--muted); font-size: 14px; line-height: 1.9; margin-top: 8px; font-weight: 300; }
 
-  .band { overflow: hidden; background: #070d1f; padding: 22px 0; margin: 40px 0 80px; transform: rotate(-1.6deg) scale(1.04); }
+  .band { overflow: hidden; background: #070d1f; padding: 22px 0; margin: 40px 0 80px; }
   .band .track { display: flex; gap: 48px; width: max-content; animation: marquee 26s linear infinite; direction: ltr; }
   .band span { font-size: clamp(26px, 4vw, 52px); font-weight: 900; white-space: nowrap; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.55); }
   .band span:nth-child(even) { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: 0; }
@@ -332,7 +335,7 @@
 </head>
 <body>
 
-<div class="loader" id="loader"><div class="in"><img src="logo.svg" alt="" /><div class="bar"><i></i></div></div></div>
+<div class="loader" id="loader"><div class="in"><img src="logo.svg" alt="" /><div class="bar"><i></i></div><button class="enter" id="enter" type="button">ادخل عالم الحوت 🔊</button></div></div>
 <div class="progress" id="progress"></div>
 <div class="glow" id="glow"></div>
 
@@ -877,15 +880,21 @@ const marks = [...qs.children];
 // عدّاد العملاء
 const countTo = (el, n) => { const o = { v: 0 }; gsap.to(o, { v: n, duration: 1.6, ease: "power2.out", onUpdate: () => el.textContent = Math.round(o.v) }); };
 
-// الـ loader
-const T0 = reduced || ADMIN ? 0 : 1.7;
-setTimeout(() => $("#loader")?.remove(), 5000); // أمان: الـ loader مايعلقش أبدًا
+// الـ loader = بوابة دخول: الضغطة بتفتح الصوت، والزمارة تشتغل أول ما يفتح الموقع
+let startShow = () => {};
 if (reduced || ADMIN) $("#loader").remove(); else {
-  const l = gsap.timeline({ onComplete: () => $("#loader")?.remove() });
+  const l = gsap.timeline();
   l.from("#loader img", { scale: .4, opacity: 0, duration: .6, ease: "back.out(2)" })
    .to("#loader .bar i", { scaleX: 1, duration: .9, ease: "power2.inOut" }, "<.1")
-   .to("#loader .in", { scale: .8, opacity: 0, duration: .35 })
-   .to("#loader", { yPercent: -100, duration: .8, ease: "expo.inOut" }, "-=.1");
+   .to("#enter", { opacity: 1, y: 0, pointerEvents: "auto", duration: .5 });
+  let entered = false;
+  const enter = () => {
+    if (entered) return; entered = true;
+    gsap.timeline().to("#loader .in", { scale: .8, opacity: 0, duration: .35 })
+      .to("#loader", { yPercent: -100, duration: .8, ease: "expo.inOut", onComplete: () => $("#loader")?.remove() }, "-=.1");
+    startShow();
+  };
+  $("#enter").addEventListener("click", enter);
 }
 
 if (!reduced) {
@@ -904,19 +913,17 @@ if (!reduced) {
     hb.to(".abyss", { opacity: 0, duration: 2.4 }, 8);
   };
   addEventListener("whale-pass", () => { setTimeout(() => Sound.horn(), 250); setTimeout(callWhale, 3600); });
-  setTimeout(() => {
+  startShow = () => {
     $("#hero").classList.add("go");
+    gsap.from("#heroName > span > span", { yPercent: 120, opacity: 0, duration: 1.2, ease: "expo.out", stagger: 0.15, delay: .5 });
+    gsap.from("#portrait", { yPercent: 18, opacity: 0, duration: 1.5, ease: "expo.out", delay: .5 });
+    gsap.from(".cta", { y: 30, opacity: 0, duration: 1, delay: 1.1, ease: "expo.out" });
     const pass = () => dispatchEvent(new Event("whale-pass")); pass(); setInterval(pass, 32000);
-  }, T0 * 1000);
-  Sound.onUnlock(() => { setTimeout(() => Sound.horn(), 300); setTimeout(callWhale, 3700); });
+  };
   ScrollTrigger.create({ trigger: "#hero", start: "top top", end: "bottom 30%", onLeave: () => Sound.setOcean(0, 1.4), onEnterBack: () => Sound.setOcean(.38, 1.4) });
   // شريط التقدم
   ScrollTrigger.create({ start: 0, end: "max", onUpdate: s => $("#progress").style.transform = `scaleX(${s.progress})` });
 
-  // دخول الهيرو
-  gsap.from("#heroName > span > span", { yPercent: 120, opacity: 0, duration: 1.2, ease: "expo.out", stagger: 0.15, delay: T0 });
-  gsap.from("#portrait", { yPercent: 18, opacity: 0, duration: 1.5, ease: "expo.out", delay: T0 });
-  gsap.from(".cta", { y: 30, opacity: 0, duration: 1, delay: T0 + .6, ease: "expo.out" });
   gsap.from(".bento .tile", { y: 80, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.08, scrollTrigger: { trigger: ".bento", start: "top 90%" } });
   gsap.from(".stack .app", { x: 120, rotate: 25, opacity: 0, duration: 1.1, ease: "back.out(1.6)", stagger: 0.09, scrollTrigger: { trigger: ".bento", start: "top 85%" } });
   ScrollTrigger.create({ trigger: "#clients", start: "top 85%", once: true, onEnter: () => countTo($("#clientsN"), DATA.clients) });
@@ -990,6 +997,7 @@ if (!reduced) {
   ScrollTrigger.create({ trigger: "#contact", start: "top 55%", onEnter: autoRing });
 }
 document.fonts.ready.then(() => ScrollTrigger.refresh());
+if (ADMIN) startShow();
 if (ADMIN) addEventListener("message", e => { if (e.data && e.data.goto) { const el = document.querySelector(e.data.goto); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - 70, behavior: "smooth" }); } });
 </script>
 <script type="module">

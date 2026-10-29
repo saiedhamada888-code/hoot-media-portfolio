@@ -39,8 +39,6 @@
   .loader .enter:hover { filter: brightness(1.1); }
   .loader .bar i { display: block; height: 100%; width: 100%; background: var(--grad); transform-origin: right; transform: scaleX(0); }
 
-  .soundhint { position: fixed; bottom: 18px; left: 50%; translate: -50% 0; z-index: 150; padding: 10px 20px; border-radius: 999px; background: rgba(7,13,31,.88); color: #fff; font: 700 13px "Cairo", sans-serif; border: 1px solid rgba(0,212,255,.5); backdrop-filter: blur(10px); pointer-events: none; animation: bob 2.4s ease-in-out infinite; transition: opacity .5s; }
-  .soundhint.gone { opacity: 0; }
   .progress { position: fixed; top: 0; right: 0; left: 0; height: 3px; z-index: 300; background: var(--grad); transform-origin: right; transform: scaleX(0); pointer-events: none; }
   .glow { position: fixed; top: 0; left: 0; width: 420px; height: 420px; margin: -210px 0 0 -210px; z-index: 40; pointer-events: none; border-radius: 50%;
     background: radial-gradient(circle, rgba(0,212,255,.16), rgba(255,46,147,.1) 45%, transparent 70%); will-change: transform; opacity: 0; transition: opacity .4s; }
@@ -340,7 +338,6 @@
 
 <div class="loader" id="loader"><div class="in"><img src="logo.svg" alt="" /><div class="bar"><i></i></div></div></div>
 <div class="progress" id="progress"></div>
-<div class="soundhint" id="soundHint">🔊 دوس في أي مكان والصوت يشتغل</div>
 <div class="glow" id="glow"></div>
 
 <script src="data.js"></script>
@@ -497,12 +494,14 @@ const Sound = (() => {
     out = ctx.createGain(); out.gain.value = 0.24;
     out.connect(comp); comp.connect(ctx.destination);
   };
+  const flush = () => { while (unlockCbs.length) unlockCbs.shift()(); };
   const unlock = () => {
-    ensure();
-    const done = () => { while (unlockCbs.length) unlockCbs.shift()(); };
-    ctx.state === "suspended" ? ctx.resume().then(done) : done();
+    ensure(); ctx.onstatechange = () => { if (ctx.state === "running") flush(); };
+    ctx.state === "suspended" ? ctx.resume().then(() => { if (ctx.state === "running") flush(); }).catch(() => {}) : flush();
   };
-  ["pointerdown", "keydown", "touchstart"].forEach(e => addEventListener(e, unlock, { capture: true }));
+  // بنحاول نشغّل الصوت من أول لحظة، ونكرر المحاولة مع أي تفاعل (المتصفح هو اللي بيسمح بعد أول ضغطة/لمسة/زرار)
+  ["pointerdown", "pointerup", "mousedown", "click", "keydown", "touchstart", "touchend", "wheel", "mousemove", "scroll"].forEach(e => addEventListener(e, unlock, { capture: true, passive: true }));
+  try { unlock(); } catch (e) {}
   document.addEventListener("visibilitychange", () => { if (ctx) document.hidden ? ctx.suspend() : ctx.resume(); });
   const ready = () => ctx && ctx.state === "running" && !document.hidden;
   // صدى كهف: impulse response طويل بيتولّد بالكود
@@ -906,8 +905,7 @@ if (!reduced) {
     const pass = () => dispatchEvent(new Event("whale-pass")); pass(); setInterval(pass, 32000);
   };
   // المتصفح مابيسمحش بصوت قبل أول ضغطة/لمسة، فأول ما تحصل الزمارة تشتغل فورًا والحوت يعدّي من الأول
-  const hint = $("#soundHint"); if (ADMIN) hint?.remove();
-  Sound.onUnlock(() => { hint?.classList.add("gone"); if (!ADMIN) dispatchEvent(new Event("whale-pass")); });
+  Sound.onUnlock(() => { if (started && !ADMIN) dispatchEvent(new Event("whale-pass")); });
   ScrollTrigger.create({ trigger: "#hero", start: "top top", end: "bottom 30%", onLeave: () => Sound.setOcean(0, 1.4), onEnterBack: () => Sound.setOcean(.38, 1.4) });
   // شريط التقدم
   ScrollTrigger.create({ start: 0, end: "max", onUpdate: s => $("#progress").style.transform = `scaleX(${s.progress})` });

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="hg" x1="6" y1="50" x2="60" y2="12" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00D4FF"/>
+      <stop offset="1" stop-color="#FF2E93"/>
+    </linearGradient>
+  </defs>
+  <!-- نافورة المية -->
+  <path d="M24 15c0-4-3-6-5-8M24 15c0-4 3-6 5-8M24 15v-7" stroke="url(#hg)" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- جسم الحوت + الديل -->
+  <path d="M6 37c0-11 9.5-18 22-18 9.5 0 16.5 4.6 19.8 11.2 2.6-3.6 6-6.6 10.7-8.2-1.6 4.1-1.9 8.4-.6 12.8-3.7-.6-7.1-.2-10.1 1.3C45.6 44 38.8 48 29 48H17C10.9 48 6 43.6 6 37Z" fill="url(#hg)"/>
+  <!-- البطن -->
+  <path d="M10 40.5c5 3.2 13 4.2 22 2.4" stroke="#fff" stroke-opacity=".55" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- العين -->
+  <circle cx="17" cy="33" r="2.4" fill="#fff"/>
+</svg>

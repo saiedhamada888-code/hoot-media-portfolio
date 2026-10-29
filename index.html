@@ -1,0 +1,1252 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>حوت الميديا — فريق تسويق وسوشيال ميديا متكامل</title>
+<meta name="description" content="حوت الميديا: ميديا باير، جرافيك ديزاين، صناعة محتوى، وإدارة كل منصات السوشيال ميديا — فيسبوك، إنستجرام، تيك توك، واتساب." />
+<link rel="icon" href="logo.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800;900&family=Instrument+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* اللونين الأساسيين — سماوي المحيط + بينك نار */
+    --c1: #00d4ff;
+    --c2: #ff2e93;
+    --grad: linear-gradient(120deg, var(--c1), var(--c2));
+    --dark: #040814;
+    --light: #f4f6fb;
+    --ink: #0a0f1f;
+    --muted: #6b7189;
+    --hero-a: #13306b;
+    --hero-b: #060b1d;
+    --ease: cubic-bezier(.22, 1, .36, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  ::selection { background: var(--c2); color: #fff; }
+  body { font-family: "Cairo", sans-serif; background: var(--dark); color: var(--ink); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  img { display: block; }
+  .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* ================= Loader ================= */
+  .loader { position: fixed; inset: 0; z-index: 999; background: var(--dark); display: grid; place-items: center; }
+  .loader .in { display: grid; justify-items: center; gap: 22px; }
+  .loader img { width: 96px; filter: drop-shadow(0 0 30px rgba(0,212,255,.45)); animation: bob 2.4s ease-in-out infinite; }
+  .loader .bar { width: 160px; height: 3px; border-radius: 3px; background: rgba(255,255,255,.1); overflow: hidden; }
+  .loader .bar i { display: block; height: 100%; width: 100%; background: var(--grad); transform-origin: right; transform: scaleX(0); }
+
+  .progress { position: fixed; top: 0; right: 0; left: 0; height: 3px; z-index: 300; background: var(--grad); transform-origin: right; transform: scaleX(0); pointer-events: none; }
+  .glow { position: fixed; top: 0; left: 0; width: 420px; height: 420px; margin: -210px 0 0 -210px; z-index: 40; pointer-events: none; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,255,.16), rgba(255,46,147,.1) 45%, transparent 70%); will-change: transform; opacity: 0; transition: opacity .4s; }
+  @keyframes bob { 50% { translate: 0 -8px; } }
+
+  /* ================= Dock ================= */
+  .dock {
+    position: fixed; top: 10px; left: 50%; translate: -50% 0; z-index: 100;
+    display: flex; gap: 6px; align-items: center; padding: 7px 9px; border-radius: 0 0 22px 22px;
+    background: #070d1f; box-shadow: 0 10px 30px rgba(0,0,0,.35), 0 1px 0 rgba(0,212,255,.25);
+  }
+  .dock a, .dock button {
+    width: 34px; height: 34px; border-radius: 10px; border: 0; cursor: pointer; color: #fff;
+    display: grid; place-items: center; font-size: 15px; text-decoration: none; font-family: inherit;
+    transition: transform .35s var(--ease);
+  }
+  .dock a:hover, .dock button:hover { transform: translateY(3px) scale(1.2); }
+  .dock .brand { background: #0a1430; padding: 4px; box-shadow: inset 0 0 0 1px rgba(0,212,255,.35); }
+  .dock .brand img { width: 100%; height: 100%; }
+  .dock .lang { background: transparent; font-size: 13px; }
+
+  /* ================= Hero ================= */
+  .opening { padding: 10px; }
+  .hero {
+    position: relative; height: calc(100vh - 140px); min-height: 520px; border-radius: 26px; overflow: hidden;
+    background:
+      radial-gradient(40% 55% at calc(var(--lx, 50%) - 22%) 70%, color-mix(in srgb, var(--c1) 45%, transparent), transparent 70%),
+      radial-gradient(40% 55% at calc(var(--lx, 50%) + 22%) 30%, color-mix(in srgb, var(--c2) 42%, transparent), transparent 70%),
+      radial-gradient(120% 90% at var(--lx, 50%) var(--ly, 35%), var(--hero-a), var(--hero-b) 75%);
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: .18; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .whale-layer { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .whale-layer.img .whale { top: 8%; width: 64%; translate: -130% 0; }
+  .whale-layer.img .whale.calf { top: 54%; width: 26%; filter: blur(1.4px); }
+  .whale-layer.img .whale img { filter: drop-shadow(0 22px 32px rgba(0,10,40,.55)) brightness(.88) saturate(1.1); transform-origin: 30% 60%; animation: undulate 4s ease-in-out infinite; }
+  .hero.go .whale-layer.img .whale { animation: swimR 32s linear infinite; }
+  .hero.go .whale-layer.img .whale.calf { animation: swimRc 32s linear infinite; animation-delay: 1.3s; }
+  @keyframes swimR { 0% { translate: -130% 0; opacity: 0; } 4% { opacity: .93; } 29% { opacity: .93; } 33% { translate: 175% 0; opacity: 0; } 100% { translate: 175% 0; opacity: 0; } }
+  @keyframes swimRc { 0% { translate: -160% 0; opacity: 0; } 4% { opacity: .5; } 29% { opacity: .5; } 33% { translate: 440% 0; opacity: 0; } 100% { translate: 440% 0; opacity: 0; } }
+  .whale3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .w3d .whale { display: none; }
+  .rays { position: absolute; inset: -20% -10% 30%; z-index: 0; pointer-events: none; opacity: .5; mix-blend-mode: screen;
+    background: repeating-linear-gradient(104deg, transparent 0 9%, rgba(120,220,255,.16) 11% 13%, transparent 15% 24%); filter: blur(10px); animation: rays 9s ease-in-out infinite alternate; }
+  @keyframes rays { from { transform: translateX(-4%) skewX(-2deg); opacity: .35; } to { transform: translateX(4%) skewX(2deg); opacity: .6; } }
+  .drops { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; border-radius: 26px; }
+  .splashflash { position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0; border-radius: 26px; background: radial-gradient(60% 50% at var(--fx, 50%) var(--fy, 40%), rgba(200,240,255,.75), rgba(0,150,255,.18) 55%, transparent 75%); }
+  .abyss { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; mix-blend-mode: screen; background: radial-gradient(60% 55% at 50% 45%, rgba(150,0,35,.6), rgba(0,50,70,.25) 55%, transparent 80%); }
+  .dread { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .35; background: radial-gradient(70% 65% at 50% 55%, transparent 40%, rgba(0,0,12,.85) 100%); }
+  .whale { position: absolute; left: 0; top: 24%; width: 74%; opacity: 0; translate: 170% 0; }
+  .whale svg, .whale img { display: block; width: 100%; height: auto; transform-origin: 85% 50%; animation: undulate 5.5s ease-in-out infinite; }
+  .whale.calf { top: 56%; width: 34%; filter: blur(2px); }
+  .hero.go .whale { animation: swim 44s linear infinite; }
+  .hero.go .whale.calf { animation: swimCalf 44s linear infinite; animation-delay: -2.5s; }
+  @keyframes swim { 0% { translate: 170% 0; opacity: 0; } 5% { opacity: .62; } 38% { opacity: .62; } 46% { translate: -130% 0; opacity: 0; } 100% { translate: -130% 0; opacity: 0; } }
+  @keyframes swimCalf { 0% { translate: 330% 0; opacity: 0; } 5% { opacity: .4; } 38% { opacity: .4; } 46% { translate: -250% 0; opacity: 0; } 100% { translate: -250% 0; opacity: 0; } }
+  .caustic { animation: caustic 7s ease-in-out infinite alternate; }
+  @keyframes caustic { from { transform: translate(-40px, 10px); } to { transform: translate(40px, -8px); } }
+  @keyframes undulate { 0%,100% { transform: rotate(-1.6deg) translateY(-6px); } 50% { transform: rotate(1.6deg) translateY(8px) skewX(1.5deg); } }
+  .hero-name {
+    position: absolute; inset: 0; pointer-events: none; color: #e8f6ff;
+    font-weight: 800; font-size: clamp(40px, 9.5vw, 170px); line-height: .9; white-space: nowrap;
+    transform: translate(var(--tx, 0px), var(--ty, 0px));
+  }
+  .hero-name .n1 { position: absolute; top: 8%; right: 5%; }
+  .hero-name .n2 { position: absolute; top: 23%; left: 5%; }
+  .hero-name span span { display: inline-block; }
+  .hero-name .n2 span {
+    background: linear-gradient(120deg, var(--c1), var(--c2), var(--c1)); background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    padding: .05em .08em .3em; margin-bottom: -.3em; line-height: 1.1; animation: shimmer 5s linear infinite;
+  }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  .portrait {
+    position: absolute; bottom: 0; left: 50%; width: max-content; height: 78%; z-index: 2;
+    /* تلاشي الجسم من اليمين والشمال ومن تحت عشان ما يبانش القص */
+    -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 22%, #000 78%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to bottom, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 22%, #000 78%, transparent 100%);
+    mask-composite: intersect;
+    transform: translate(calc(-50% + var(--px, 0px)), var(--py, 0px));
+    filter: drop-shadow(0 0 40px rgba(0,212,255,.25)) drop-shadow(0 30px 40px rgba(0,0,0,.35));
+  }
+  .portrait img { max-width: none; height: 100%; width: auto; object-fit: contain; }
+  .portrait .ph {
+    height: 100%; aspect-ratio: 3/4; display: none; place-items: end center; padding-bottom: 30%;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,.25) 0 18%, transparent 19%), radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.18) 0 45%, transparent 46%);
+    color: rgba(255,255,255,.7); font-size: 14px; text-align: center;
+  }
+  .portrait.missing img { display: none; }
+  .portrait.missing .ph { display: grid; }
+  .cta {
+    position: absolute; z-index: 3; bottom: 18%; left: 50%; translate: -50% 0;
+    display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px 8px 8px; border-radius: 999px;
+    background: rgba(255,255,255,.92); color: #000; text-decoration: none; font-size: 14px; font-weight: 600;
+    backdrop-filter: blur(10px);
+  }
+  .cta i { width: 30px; height: 30px; border-radius: 50%; background: var(--grad); color: #fff; display: grid; place-items: center; font-style: normal; }
+
+  /* ================= Bento ================= */
+  .bento { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .tile { position: relative; border-radius: 24px; min-height: 340px; overflow: hidden; }
+  .tools-tile { background: radial-gradient(80% 80% at 0% 100%, rgba(255,46,147,.18), transparent 60%), radial-gradient(70% 70% at 100% 0%, rgba(0,212,255,.14), transparent 60%), #0a1022; color: #fff; padding: 22px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .stack { position: absolute; top: 34px; right: 26px; height: 120px; width: 360px; --step: 54px; }
+  .stack .app {
+    position: absolute; top: 6px; width: 92px; height: 92px; border-radius: 27px; display: grid; place-items: center;
+    background: var(--bg); transition: transform .7s var(--ease); isolation: isolate;
+    right: calc(var(--i) * var(--step)); z-index: calc(10 - var(--i));
+    animation: bob 4.2s ease-in-out infinite; animation-delay: calc(var(--i) * -.7s);
+    box-shadow:
+      inset 0 -7px 12px rgba(0,0,0,.35), inset 0 5px 9px rgba(255,255,255,.6), inset 0 0 0 1px rgba(255,255,255,.28),
+      -10px 14px 26px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.35);
+  }
+  .stack .app::before { content: ""; position: absolute; inset: 3px 3px 52% 3px; border-radius: 24px 24px 50% 50% / 24px 24px 18px 18px; background: linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,0)); z-index: 1; pointer-events: none; }
+  .stack .app img { position: relative; z-index: 2; width: 46px; height: 46px; filter: brightness(0) invert(1) drop-shadow(0 3px 3px rgba(0,0,0,.4)); }
+  .stack .app.dark img { filter: brightness(0) drop-shadow(0 2px 1px rgba(255,255,255,.55)); }
+  .stack .app.tt img { filter: brightness(0) invert(1) drop-shadow(2.5px 2.5px 0 #fe2c55) drop-shadow(-2.5px -2.5px 0 #25f4ee); }
+  .tools-tile:hover .app { transform: translateX(calc(var(--i) * -16px)) rotate(calc(var(--i) * -5deg)) scale(1.06); }
+  .tools-tile h3 { font-size: 26px; font-weight: 800; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .chips span { font-size: 12px; padding: 6px 12px; border-radius: 999px; background: #141b33; color: #c9d3f0; }
+
+  /* Glass folders — جواها مش بيبان غير لما تدوس */
+  .gfolder { background: radial-gradient(90% 70% at 50% 0%, rgba(0,212,255,.1), transparent 70%), #0a1022; cursor: pointer; perspective: 900px; min-height: 380px; }
+  .gfolder .front {
+    position: absolute; left: 10px; right: 10px; bottom: 10px; height: 76%; z-index: 3; border-radius: 22px;
+    padding: 24px; display: flex; flex-direction: column; justify-content: flex-end;
+    background: rgba(236, 238, 244, .66); border: 1px solid rgba(255,255,255,.7);
+    backdrop-filter: blur(22px) saturate(1.5); -webkit-backdrop-filter: blur(22px) saturate(1.5);
+    transform-origin: 50% 100%; transition: transform .8s var(--ease), height .8s var(--ease); overflow: hidden;
+  }
+  .gfolder .front::before { content: attr(data-tab); position: absolute; top: 0; right: 0; padding: 10px 20px; font-size: 12px; font-weight: 600; background: rgba(255,255,255,.55); border-radius: 0 22px 0 18px; }
+  .gfolder .spec { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: soft-light; opacity: .9; background: radial-gradient(circle at var(--sx, 70%) var(--sy, 20%), rgba(255,255,255,.95), transparent 55%); }
+  .gfolder h3 { font-size: clamp(24px, 3vw, 38px); font-weight: 800; position: relative; }
+  .gfolder p { color: #55555d; font-size: 13px; margin-top: 4px; position: relative; }
+  .gfolder:hover .front { transform: translateY(-6px) rotateX(-6deg); }
+  .gfolder.open .front { height: 37%; transform: rotateX(-10deg); }
+  .gfolder .inside {
+    position: absolute; inset: 16px 16px 150px; z-index: 2; border-radius: 18px; padding: 14px; overflow: auto; cursor: default;
+    background: linear-gradient(150deg, #fff, #e6f6ff 45%, #ffe6f2); color: var(--ink);
+    opacity: 0; transform: translateY(46px) scale(.94); pointer-events: none; visibility: hidden;
+    transition: opacity .5s var(--ease), transform .8s var(--ease), visibility 0s .8s;
+  }
+  .gfolder.open .inside { opacity: 1; transform: none; pointer-events: auto; visibility: visible; transition-delay: .12s, .12s, 0s; }
+  .inside h4 { font-size: 12px; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
+  .pgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pcard { border-radius: 14px; padding: 12px; color: #fff; background: var(--g); min-height: 72px; display: flex; flex-direction: column; justify-content: flex-end; text-decoration: none; position: relative; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 6px 14px rgba(10,15,31,.12); transition: transform .4s var(--ease); }
+  .pcard:hover { transform: translateY(-3px) scale(1.02); }
+  .pcard b { font-size: 18px; font-weight: 900; line-height: 1.2; } .pcard small { opacity: .9; font-size: 12px; }
+  .pcard::after { content: "↗"; position: absolute; top: 8px; left: 10px; opacity: .85; }
+  .bchips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .bchip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 999px; background: #fff; box-shadow: 0 4px 14px rgba(10,15,31,.08); font-weight: 700; font-size: 13px; }
+  .bchip i { width: 26px; height: 26px; border-radius: 50%; background: var(--grad); color: #fff; display: grid; place-items: center; font-style: normal; font-size: 12px; }
+  .opt { border: 1.5px solid #c9d6f2; border-radius: 999px; padding: 7px 12px; font-size: 12px; cursor: pointer; background: #fff; font-family: inherit; font-weight: 600; color: var(--ink); transition: transform .3s var(--ease); }
+  .opt:hover { transform: translateY(-2px); }
+  .opt.on { background: var(--grad); color: #fff; border-color: transparent; }
+  .send { display: block; margin-top: 12px; text-align: center; padding: 11px; border-radius: 12px; background: #0a0f1f; color: #fff; text-decoration: none; font-weight: 700; font-size: 13px; }
+
+  /* ================= Light continuation ================= */
+  .continuation { background: var(--light); }
+  .statement { min-height: 100vh; display: grid; place-items: center; padding: 120px 24px; }
+  .statement p { max-width: 880px; text-align: center; font-size: clamp(30px, 4.6vw, 64px); font-weight: 600; line-height: 1.55; }
+  .statement .w { opacity: .12; white-space: nowrap; display: inline-block; }
+  .chip-ico {
+    display: inline-grid; place-items: center; width: 1.1em; height: 1.1em; vertical-align: -0.12em; border-radius: .28em; margin: 0 .1em;
+    font-size: .9em; color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35), 0 6px 14px rgba(0,0,0,.15);
+  }
+  .chip-ico img { width: 72%; height: 72%; }
+
+  .cards { max-width: 1200px; margin: 0 auto; padding: 40px 24px 120px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 28px; perspective: 900px; }
+  .card3d { text-align: right; }
+  .ico3d {
+    font-family: "Instrument Sans", sans-serif; width: 130px; height: 130px; border-radius: 34px; margin-bottom: 24px; position: relative; display: grid; place-items: center;
+    font-size: 62px; color: #fff; overflow: hidden; transform-style: preserve-3d;
+    box-shadow: inset 0 -10px 20px rgba(0,0,0,.35), inset 0 8px 16px rgba(255,255,255,.35), 0 20px 40px rgba(0,0,0,.18);
+  }
+  .ico3d::before { content: ""; position: absolute; inset: -40%; background: conic-gradient(from var(--a, 0deg), transparent 0 20%, rgba(255,255,255,.55) 28%, transparent 36% 70%, rgba(255,255,255,.35) 78%, transparent 86%); animation: sheen 5s linear infinite; mix-blend-mode: overlay; }
+  @property --a { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+  @keyframes sheen { to { --a: 360deg; } }
+  .card3d h3 { font-size: 24px; font-weight: 800; }
+  .card3d p { color: var(--muted); font-size: 14px; line-height: 1.9; margin-top: 8px; font-weight: 300; }
+
+  .band { overflow: hidden; background: #070d1f; padding: 22px 0; margin: 40px 0 80px; transform: rotate(-1.6deg) scale(1.04); }
+  .band .track { display: flex; gap: 48px; width: max-content; animation: marquee 26s linear infinite; direction: ltr; }
+  .band span { font-size: clamp(26px, 4vw, 52px); font-weight: 900; white-space: nowrap; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.55); }
+  .band span:nth-child(even) { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: 0; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  .ltile {
+    width: 1em; height: 1em; border-radius: .26em; display: inline-grid; place-items: center; flex-shrink: 0;
+    font-weight: 700; color: #fff; font-size: 64px; line-height: 1;
+    background: linear-gradient(160deg, #44474f, #121317);
+    box-shadow: inset 0 -.08em .14em rgba(0,0,0,.5), inset 0 .06em .1em rgba(255,255,255,.35), 0 .12em .3em rgba(0,0,0,.25);
+  }
+  .ltile b { font-family: "Cairo"; font-size: .5em; background: linear-gradient(180deg, #fff, #b9bcc6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .ltile.warm { background: linear-gradient(160deg, #ff7ab8, #d1006a); }
+  .ltile.cool { background: linear-gradient(160deg, #5fe3ff, #0077b6); }
+  .ltile.mix { background: linear-gradient(140deg, var(--c1), var(--c2)); }
+
+  .svc-list { max-width: 900px; margin: 0 auto; padding: 40px 24px 160px; }
+  .svc-row { display: flex; align-items: center; gap: 22px; padding: 18px 0; border-bottom: 1px solid rgba(0,0,0,.07); }
+  .svc-row .ltile { font-size: 60px; }
+  .svc-row strong { font-size: clamp(22px, 3vw, 34px); font-weight: 800; }
+  .svc-row p { color: var(--muted); font-size: 14px; font-weight: 300; margin-top: 4px; }
+  .platforms { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .platforms span { font-size: 11px; padding: 3px 10px; border-radius: 999px; background: #e7ebf6; color: #3b4466; }
+
+  .whathow { height: 100vh; display: flex; flex-direction: column; justify-content: center; gap: 30px; padding: 0 8vw; overflow: hidden; }
+  .whathow .row { display: flex; align-items: center; gap: 30px; font-size: clamp(54px, 9vw, 140px); font-weight: 900; }
+  .whathow .row .ltile { font-size: 1em; }
+  .whathow .row.r2 { color: #b3b9cc; }
+
+  /* ================= ليه نضيّع وقت؟؟؟ ================= */
+  .why { height: 100vh; position: relative; background: var(--light); overflow: hidden; }
+  .why-stage { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 0 5vw; }
+  .gq {
+    position: absolute; font-weight: 900; line-height: 1; font-size: clamp(240px, 46vw, 680px); pointer-events: none;
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+    opacity: 0; transform: scale(.3) rotate(var(--r)); will-change: transform, opacity;
+  }
+  .gq1 { top: -10%; right: 4%; --r: -12deg; }
+  .gq2 { bottom: -22%; left: 2%; --r: 14deg; }
+  .gq3 { top: 6%; left: 36%; --r: 6deg; }
+  .why-title { position: relative; z-index: 2; font-size: clamp(44px, 8.4vw, 120px); font-weight: 900; line-height: 1.12; max-width: 94vw; opacity: 0; }
+  .why-title .l { display: block; }
+  .qline { display: inline; }
+  .qline i { font-style: normal; font-size: .62em; display: inline-block; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; opacity: 0; transform: scale(0); }
+
+  /* ================= Contact ================= */
+  .contact { padding: 120px 24px 160px; text-align: center; background: var(--light); }
+  .contact h2 { font-size: clamp(50px, 9vw, 130px); font-weight: 900; line-height: 1.15; }
+  .pbtn {
+    width: .78em; height: .78em; border-radius: .24em; border: 0; cursor: pointer; padding: .14em; color: #fff;
+    display: inline-grid; place-items: center; vertical-align: -.06em; background: var(--grad); position: relative;
+    box-shadow: inset 0 -.06em .1em rgba(0,0,0,.25), inset 0 .05em .08em rgba(255,255,255,.5), 0 .12em .3em rgba(255,46,147,.35);
+  }
+  .pbtn svg { width: 100%; height: 100%; }
+  .pbtn.hit { animation: shake .075s linear infinite; }
+  .pbtn.hit::after { content: ""; position: absolute; inset: 0; border-radius: inherit; border: 3px solid var(--c1); animation: ripple 1s ease-out infinite; }
+  @keyframes shake { 0%,100% { transform: rotate(-9deg); } 50% { transform: rotate(9deg); } }
+  @keyframes ripple { from { transform: scale(1); opacity: .9; } to { transform: scale(1.9); opacity: 0; } }
+  .phone-label { margin-top: 18px; color: var(--muted); font-size: 14px; min-height: 22px; }
+  .lead { max-width: 620px; margin: 36px auto 0; }
+  .fld { position: relative; display: block; margin: 16px 0; text-align: right; }
+  .fld input, .fld textarea {
+    width: 100%; border: 0; outline: 0; resize: none; border-radius: 20px; padding: 28px 22px 10px; font: 700 18px "Cairo", sans-serif; color: var(--ink);
+    background: rgba(255,255,255,.85); box-shadow: inset 0 0 0 1.5px #d6def0, 0 10px 30px rgba(10,15,31,.05);
+    transition: box-shadow .4s var(--ease), transform .4s var(--ease);
+  }
+  .fld span { position: absolute; right: 22px; top: 19px; color: var(--muted); font-weight: 600; font-size: 16px; pointer-events: none; transition: all .35s var(--ease); transform-origin: right; }
+  .fld input:focus, .fld textarea:focus { box-shadow: 0 0 0 2px var(--c1), 0 0 0 5px rgba(255,46,147,.18), 0 14px 36px rgba(0,212,255,.22); transform: translateY(-2px); }
+  .fld input:focus + span, .fld textarea:focus + span, .fld input:not(:placeholder-shown) + span, .fld textarea:not(:placeholder-shown) + span { top: 7px; font-size: 12px; color: var(--c2); }
+  .fld i { position: absolute; left: 22px; right: 22px; bottom: 0; height: 3px; border-radius: 3px; background: var(--grad); transform: scaleX(0); transition: transform .5s var(--ease); }
+  .fld input:focus ~ i, .fld textarea:focus ~ i { transform: scaleX(1); }
+  .fld.bad input { animation: nope .5s; box-shadow: 0 0 0 2px #ff4d6d; }
+  @keyframes nope { 20%,60% { transform: translateX(8px); } 40%,80% { transform: translateX(-8px); } }
+  .lead-go {
+    position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; padding: 20px 42px; border: 0; border-radius: 999px; cursor: pointer;
+    color: #fff; font: 800 20px "Cairo", sans-serif; background: linear-gradient(120deg, #25d366, var(--c1) 45%, var(--c2)); background-size: 200% 100%; animation: shimmer 5s linear infinite;
+    box-shadow: inset 0 -4px 10px rgba(0,0,0,.18), inset 0 3px 6px rgba(255,255,255,.45), 0 16px 40px rgba(255,46,147,.3);
+  }
+  .lead-go img { width: 26px; height: 26px; filter: brightness(0) invert(1); }
+  .lead-go b { font-size: 24px; display: inline-block; animation: bob 2.6s ease-in-out infinite; }
+  .lead-go:hover { box-shadow: inset 0 -4px 10px rgba(0,0,0,.18), inset 0 3px 6px rgba(255,255,255,.45), 0 20px 56px rgba(0,212,255,.45); }
+  .lead-go:active { filter: brightness(.95); }
+  .lead-note { margin-top: 14px; color: var(--muted); font-size: 13px; }
+  footer { background: var(--light); text-align: center; padding: 30px; color: var(--muted); font-size: 12px; }
+
+  @media (max-width: 900px) {
+    .bento { grid-template-columns: 1fr; }
+    .hero-name { font-size: 13vw; }
+    .hero-name .n1 { top: 11%; right: 6%; } .hero-name .n2 { top: 25%; left: 6%; }
+    .portrait { height: 64%; }
+    .stack { --step: 46px; transform: scale(.85); transform-origin: right top; }
+  }
+  @media (pointer: coarse) { .glow { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .ico3d::before, .pbtn.ringing, .band .track, .bubbles i, .stack .app, .hero-name .n2 span { animation: none; }
+    .gq, .why-title, .qline i, .statement .w { opacity: 1 !important; transform: none !important; }
+    .gq { opacity: .25 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="loader" id="loader"><div class="in"><img src="logo.svg" alt="" /><div class="bar"><i></i></div></div></div>
+<div class="progress" id="progress"></div>
+<div class="glow" id="glow"></div>
+
+<script src="data.js"></script>
+<script src="content.js"></script>
+<script>
+/* البيانات = الافتراضي + content.js (اللي بتصدّره من لوحة التحكم) + معاينتك المحلية */
+const ADMIN = /[?&]admin/.test(location.search);
+const DATA = (() => {
+  const d = structuredClone(DATA_DEFAULTS); let local = null;
+  try { local = JSON.parse(localStorage.getItem("hoot_overrides")); } catch (e) {}
+  return Object.assign(d, window.SITE_OVERRIDES || {}, local || {});
+})();
+{ const r = document.documentElement.style; r.setProperty("--c1", DATA.colors.c1); r.setProperty("--c2", DATA.colors.c2); }
+</script>
+
+<!-- ================= Dock ================= -->
+<nav class="dock" aria-label="روابط سريعة">
+  <a href="#top" class="brand" title="حوت الميديا"><img src="logo.svg" alt="حوت الميديا" /></a>
+  <a href="#projects" style="background:#4f46e5" title="أعمالنا">▦</a>
+  <a href="#team" style="background:#ff2e93" title="الفريق">👥</a>
+  <a href="#services" style="background:#00a6d6" title="الخدمات">◧</a>
+  <a href="#why" style="background:#f97316" title="ليه إحنا">↝</a>
+  <a id="dockWa" target="_blank" rel="noopener" style="background:#22c55e" title="واتساب">💬</a>
+  <button id="muteBtn" class="lang" title="كتم الأصوات" aria-label="كتم الأصوات">🔊</button>
+</nav>
+
+<!-- ================= Opening (dark) ================= -->
+<div class="opening" id="top">
+  <section class="hero" id="hero">
+    <div class="rays" aria-hidden="true"></div>
+    <div class="whale-layer" id="whaleLayer" aria-hidden="true"></div>
+    <div class="abyss" aria-hidden="true"></div>
+    <div class="dread" aria-hidden="true"></div>
+    <div class="splashflash" id="splashFlash" aria-hidden="true"></div>
+    <canvas class="drops" id="drops" aria-hidden="true"></canvas>
+    <h1 class="hero-name" id="heroName"><span class="n1"></span><span class="n2"></span></h1>
+    <div class="portrait" id="portrait">
+      <img id="photo" alt="حوت الميديا" />
+      <div class="ph">حط صورتك باسم<br/>photo.webp<br/>جنب الملف</div>
+    </div>
+    <a href="#contact" class="cta mag"><span data-t="cta">ابدأ مع الحوت</span> <i>←</i></a>
+  </section>
+
+  <div class="bento">
+    <div class="tile tools-tile">
+      <div class="stack" id="stack"></div>
+      <h3 data-t="toolsTitle">كل المنصات. <span class="grad-text">فريق واحد.</span></h3>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="tile gfolder" id="projects" tabindex="0" role="button" aria-expanded="false" aria-label="افتح أعمالنا">
+      <div class="inside" id="insideProjects"></div>
+      <div class="front" id="featured"><div class="spec"></div><h3 data-t="projectsTitle">أعمالنا</h3><p data-t="projectsSub">دوس على الفولدر وشوف شغلنا.</p></div>
+    </div>
+    <div class="tile gfolder" id="clients" tabindex="0" role="button" aria-expanded="false" aria-label="افتح عملاءنا">
+      <div class="inside" id="insideClients"></div>
+      <div class="front" id="clientsFront" data-tab="براندات وثقت فينا"><div class="spec"></div><h3><span id="clientsN" class="grad-text">0</span><span class="grad-text">+</span> <span data-t="clientsWord">عميل</span></h3><p data-t="clientsSub">دوس وشوف مين اشتغلنا معاهم.</p></div>
+    </div>
+    <div class="tile gfolder" id="brief" tabindex="0" role="button" aria-expanded="false" aria-label="افتح استشارة مجانية">
+      <div class="inside" id="insideBrief"></div>
+      <div class="front" id="briefFront" data-tab="استشارة مجانية"><div class="spec"></div><h3 data-t="briefTitle">عندك براند؟</h3><p data-t="briefSub">اختار اللي محتاجه وابعتلنا فورًا.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= Continuation (light) ================= -->
+<div class="continuation">
+  <section class="statement" id="statement"><p id="stmt"></p></section>
+  <section class="cards" id="team"></section>
+  <div class="band" aria-hidden="true"><div class="track" id="band"></div></div>
+  <section class="svc-list" id="services"></section>
+
+  <section class="whathow" id="whathow">
+    <div class="row r1"><span class="ltile warm"><b>ح</b></span><span data-t="whatQ1">هنعمل إيــــه؟</span></div>
+    <div class="row r2"><span class="ltile cool"><b>م</b></span><span data-t="whatQ2">وإزاي؟</span></div>
+  </section>
+
+  <section class="why" id="why">
+    <div class="why-stage">
+      <span class="gq gq1">؟</span><span class="gq gq2">؟</span><span class="gq gq3">؟</span>
+      <h2 class="why-title" id="whyTitle"><span class="l" data-t="whyL1">ليه نضيّــــــع</span><span class="l"><span data-t="whyL2">وقت</span><span class="qline" id="qs"></span></span></h2>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <h2><span data-t="contactA">كلّمنا</span> <button class="pbtn" id="phone" aria-label="شغّل أو أوقف الرنة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><br/><span class="grad-text" data-t="contactB">دلوقتي</span></h2>
+    <p style="color:var(--muted);margin-top:16px;font-size:20px" data-t="contactSub">والحوت يبلع المنافسين. 🐋</p>
+    <div class="phone-label" id="phoneLabel"></div>
+    <form class="lead" id="lead" novalidate>
+      <label class="fld"><input id="fName" name="name" placeholder=" " autocomplete="name" /><span data-t="fName">اسمك — أناديك بإيه؟</span><i></i></label>
+      <label class="fld"><input id="fMail" name="email" type="email" placeholder=" " autocomplete="email" dir="ltr" /><span data-t="fMail">الإيميل بتاعك</span><i></i></label>
+      <label class="fld"><textarea id="fIdea" name="idea" rows="3" placeholder=" "></textarea><span data-t="fIdea">احكيلي عن فكرتك</span><i></i></label>
+      <button type="submit" class="lead-go mag"><img src="https://cdn.jsdelivr.net/npm/simple-icons@13.21.0/icons/whatsapp.svg" alt="" /><span data-t="fBtn">يلا نتكلم يا عالمي</span><b>🐋</b></button>
+      <p class="lead-note" id="leadNote" data-t="fNote">هتفتحلك محادثة واتساب جاهزة برسالتك.</p>
+    </form>
+  </section>
+  <footer><img src="logo.svg" alt="" style="width:34px;margin:0 auto 8px" />© <span id="yr"></span> <span data-t="footer">حوت الميديا — كل الحقوق محفوظة</span></footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+history.scrollRestoration = "manual"; scrollTo(0, 0);
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const finePointer = matchMedia("(pointer: fine)").matches;
+const ICON = slug => `https://cdn.jsdelivr.net/npm/simple-icons@13.21.0/icons/${slug}.svg`;
+
+/* ================= Fill data ================= */
+$$("[data-t]").forEach(el => { const v = DATA.texts[el.dataset.t]; if (v != null) el.innerHTML = v; });
+$("#clientsFront").dataset.tab = DATA.texts.clientsTab; $("#briefFront").dataset.tab = DATA.texts.briefTab;
+document.title = `${DATA.brandName} — ${DATA.texts.toolsTitle.replace(/<[^>]+>/g, "")}`;
+$("#dockWa").href = `https://wa.me/${DATA.whatsapp}`;
+$("#yr").textContent = new Date().getFullYear();
+const line = s => `<span>${s}</span>`; // سطر كامل عشان الحروف العربي تفضل متشبكة
+$("#heroName .n1").innerHTML = line(DATA.nameLine1);
+$("#heroName .n2").innerHTML = line(DATA.nameLine2);
+const photo = $("#photo");
+photo.onerror = () => $("#portrait").classList.add("missing");
+photo.src = DATA.photo;
+
+$("#stack").innerHTML = DATA.platforms.map((p, i) =>
+  `<div class="app ${p.cls || ""}" style="--i:${i};--bg:${p.bg}"><img src="${ICON(p.slug)}" alt="${p.slug}" /></div>`).join("");
+$("#chips").innerHTML = DATA.chips.map(c => `<span>${c}</span>`).join("");
+$("#featured").dataset.tab = DATA.featuredProject;
+$("#insideProjects").innerHTML = `<h4>${DATA.texts.projectsInside}</h4><div class="pgrid">` + DATA.projects.map(p => {
+  const a = p.link && p.link !== "#";
+  return `<${a ? "a" : "div"} class="pcard" style="--g:${p.g}" ${a ? `href="${p.link}" target="_blank" rel="noopener"` : ""}><b>${p.name}</b><small>${p.type}</small></${a ? "a" : "div"}>`;
+}).join("") + `</div>`;
+$("#insideClients").innerHTML = `<h4>${DATA.texts.clientsTab}</h4><div class="bchips">` + DATA.brands.map(b => `<span class="bchip"><i>${b[0]}</i>${b}</span>`).join("") + `</div>`;
+$("#insideBrief").innerHTML = `<h4>${DATA.texts.briefInside}</h4><div class="bchips">` + DATA.briefOptions.map(o => `<button class="opt" type="button">${o}</button>`).join("") + `</div><a class="send" id="briefSend" target="_blank" rel="noopener">${DATA.texts.briefSend}</a>`;
+
+$("#stmt").innerHTML = DATA.statement.map(([w, ico, col]) => {
+  w = w.replace("{brand}", DATA.brandName);
+  const inner = ico === "logo" ? `<img src="logo.svg" alt="" />` : ico;
+  const chip = ico ? `<span class="chip-ico" style="background:${col}">${inner}</span> ` : "";
+  return w.includes("{logo}") ? `<span class="w">${w.replace("{logo}", chip)}</span>` : `<span class="w">${chip}${w}</span>`;
+}).join(" ");
+
+$("#team").innerHTML = DATA.team.map(c =>
+  `<div class="card3d"><div class="ico3d" style="background:${c.bg}">${c.icon}</div><h3>${c.title}</h3><p>${c.text}</p></div>`).join("");
+const bandHTML = DATA.band.map(t => `<span>${t}</span><span>✦</span>`).join("");
+$("#band").innerHTML = bandHTML + bandHTML;
+
+const tileCls = ["mix", "warm", "cool", ""];
+$("#services").innerHTML = DATA.services.map(([name, desc, L, tags], i) =>
+  `<div class="svc-row"><span class="ltile ${tileCls[i % 4]}"><b>${L}</b></span><div><strong>${name}</strong><p>${desc}</p>` +
+  `<div class="platforms">${tags.map(t => `<span>${t}</span>`).join("")}</div></div></div>`).join("");
+
+/* ================= Sound engine (Web Audio, no files) ================= */
+const Sound = (() => {
+  let ctx, out, muted = false, live = 0, ringNodes = [], oceanG = null, oceanLevel = 0, bubbleTimer = 0, irBuf = null;
+  const unlockCbs = [];
+  const ensure = () => {
+    if (ctx) return;
+    ctx = new AudioContext();
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -18; comp.ratio.value = 8;
+    out = ctx.createGain(); out.gain.value = 0.24;
+    out.connect(comp); comp.connect(ctx.destination);
+  };
+  const unlock = () => {
+    ensure();
+    const done = () => { while (unlockCbs.length) unlockCbs.shift()(); };
+    ctx.state === "suspended" ? ctx.resume().then(done) : done();
+  };
+  ["pointerdown", "keydown", "touchstart"].forEach(e => addEventListener(e, unlock, { capture: true }));
+  document.addEventListener("visibilitychange", () => { if (ctx) document.hidden ? ctx.suspend() : ctx.resume(); });
+  const ready = () => ctx && ctx.state === "running" && !document.hidden;
+  // صدى كهف: impulse response طويل بيتولّد بالكود
+  function reverb() {
+    if (!irBuf) {
+      const len = ctx.sampleRate * 5.5; irBuf = ctx.createBuffer(2, len, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) { const d = irBuf.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    }
+    const cv = ctx.createConvolver(); cv.buffer = irBuf; return cv;
+  }
+  function tone({ freq = 600, to = 200, dur = 0.12, type = "sine", vol = 1, at = 0, ring = false }) {
+    if (muted || !ready() || live > 14) return;
+    const t = ctx.currentTime + at, o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, t);
+    o.frequency.exponentialRampToValueAtTime(to, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.008);
+    g.gain.setValueAtTime(vol, t + dur * 0.7);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(out);
+    live++; o.onended = () => { live--; g.disconnect(); };
+    o.start(t); o.stop(t + dur + 0.02);
+    if (ring) ringNodes.push(o);
+  }
+  // نغمة نوكيا الشهيرة = مقطع من "Gran Vals" لتاريجا (مؤلَّف قديم) — بنعزفها هنا بالكود
+  const NOKIA = [[659.25,1],[587.33,1],[369.99,2],[415.30,2],[554.37,1],[493.88,1],[293.66,2],[329.63,2],[493.88,1],[440,1],[277.18,2],[329.63,2],[440,4]];
+  const UNIT = 0.125, TUNE_LEN = NOKIA.reduce((a, n) => a + n[1], 0) * UNIT;
+  return {
+    ready, onUnlock: cb => unlockCbs.push(cb),
+    pop: (p = 1) => tone({ freq: 900 * p, to: 180 * p, dur: 0.11 }),
+    tick: () => tone({ freq: 1800, to: 1200, dur: 0.03, type: "triangle", vol: 0.4 }),
+    whoosh: open => tone({ freq: open ? 220 : 520, to: open ? 520 : 220, dur: 0.22, type: "triangle", vol: 0.5 }),
+    nokia(repeats = 3) { // بيرجّع توقيت كل نوتة عشان التليفون يهتز معاها بالظبط
+      let t = 0; const notes = [];
+      for (let r = 0; r < repeats; r++) {
+        NOKIA.forEach(([f, u]) => { tone({ freq: f, to: f, dur: u * UNIT * 0.92, type: "square", vol: 0.32, at: t, ring: true }); notes.push([t, u * UNIT * 0.92]); t += u * UNIT; });
+        t += 0.55;
+      }
+      return { total: t, notes };
+    },
+    // حوت مرعب: نداء عميق بيصرخ في الآخر + بوم تحت + صدى كهف طويل
+    whale() {
+      if (muted || !ready()) return;
+      this.startOcean(); this.swell(); // المية والحوت في نفس اللحظة
+      const t = ctx.currentTime, dur = 9;
+      const m = ctx.createGain(); m.gain.setValueAtTime(0.0001, t);
+      m.gain.exponentialRampToValueAtTime(2.6, t + 1.2); m.gain.setValueAtTime(2.6, t + 4.8); m.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      const wet = ctx.createGain(); wet.gain.value = 1.5; wet.connect(out); const rv = reverb(); rv.connect(wet);
+      const dry = ctx.createGain(); dry.gain.value = .8; m.connect(dry); dry.connect(out);
+      m.connect(rv);
+      const echo = ctx.createDelay(1.5); echo.delayTime.value = 0.55;
+      const fb = ctx.createGain(); fb.gain.value = 0.55; echo.connect(fb); fb.connect(echo); m.connect(echo); echo.connect(wet);
+      const lfo = ctx.createOscillator(); lfo.frequency.value = 4.6;
+      const curve = (f, a, b, c) => { f.setValueAtTime(a, t); f.exponentialRampToValueAtTime(b, t + 3.4); f.exponentialRampToValueAtTime(c, t + dur); };
+      const voice = (type, a, b, c, vol, vib, filt, fq, startAt = 0) => {
+        const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; curve(o.frequency, a, b, c);
+        const d = ctx.createGain(); d.gain.value = vib; lfo.connect(d); d.connect(o.frequency);
+        g.gain.setValueAtTime(0.0001, t); g.gain.setValueAtTime(0.0001, t + startAt); g.gain.exponentialRampToValueAtTime(vol, t + startAt + 1.4);
+        let n = o; if (filt) { const f = ctx.createBiquadFilter(); f.type = filt; f.frequency.value = fq; f.Q.value = 5; n.connect(f); n = f; }
+        n.connect(g); g.connect(m); o.start(t); o.stop(t + dur + .1);
+      };
+      voice("sine", 34, 86, 24, 1.1, 2.5);                       // الجسم: دوشة واطية بتهز
+      voice("sawtooth", 68, 172, 48, .34, 4, "lowpass", 360);    // خشونة الحنجرة
+      voice("sawtooth", 410, 1240, 280, .09, 26, "bandpass", 900, 2.4); // الصرخة المخيفة في النص
+      voice("sine", 777, 1180, 560, .05, 40, null, 0, 3);        // طنين غير متناسق (مزعج)
+      voice("triangle", 103, 131, 87, .18, 9, "lowpass", 300, 1.2); // طبقة تانية نشاز شوية
+      // زئير مشوّه (distortion) بيخلّي الصوت وحشي
+      const ws = ctx.createWaveShaper(), crv = new Float32Array(1024);
+      for (let i = 0; i < 1024; i++) { const x = (i / 512) - 1; crv[i] = Math.tanh(x * 14); }
+      ws.curve = crv; ws.oversample = "2x";
+      const gr = ctx.createOscillator(), grg = ctx.createGain(), grf = ctx.createBiquadFilter();
+      gr.type = "sawtooth"; gr.frequency.setValueAtTime(52, t); gr.frequency.exponentialRampToValueAtTime(150, t + 3.6); gr.frequency.exponentialRampToValueAtTime(38, t + dur);
+      const gv = ctx.createGain(); gv.gain.value = 9; lfo.connect(gv); gv.connect(gr.frequency);
+      grf.type = "lowpass"; grf.frequency.value = 780; grg.gain.setValueAtTime(0.0001, t); grg.gain.setValueAtTime(0.0001, t + 1.8); grg.gain.exponentialRampToValueAtTime(.5, t + 3.4); grg.gain.exponentialRampToValueAtTime(0.0001, t + dur - 1);
+      gr.connect(ws); ws.connect(grf); grf.connect(grg); grg.connect(m); gr.start(t); gr.stop(t + dur + .1);
+      // صرخة حادة قصيرة بتخض
+      const sc = ctx.createOscillator(), scg = ctx.createGain(), scf = ctx.createBiquadFilter();
+      sc.type = "sawtooth"; sc.frequency.setValueAtTime(880, t + 3.6); sc.frequency.exponentialRampToValueAtTime(2300, t + 4.6); sc.frequency.exponentialRampToValueAtTime(700, t + 5.8);
+      const sv = ctx.createOscillator(), svg = ctx.createGain(); sv.frequency.value = 17; svg.gain.value = 120; sv.connect(svg); svg.connect(sc.frequency);
+      scf.type = "bandpass"; scf.frequency.value = 1700; scf.Q.value = 3; scg.gain.setValueAtTime(0.0001, t + 3.6); scg.gain.exponentialRampToValueAtTime(.13, t + 4.1); scg.gain.exponentialRampToValueAtTime(0.0001, t + 5.9);
+      sc.connect(scf); scf.connect(scg); scg.connect(m); sc.start(t + 3.6); sc.stop(t + 6); sv.start(t + 3.6); sv.stop(t + 6);
+      // نبضات قلب تحت مع الرعب
+      [4.9, 5.5, 6.5, 7.1].forEach((at, k) => {
+        const h = ctx.createOscillator(), hg = ctx.createGain(); h.frequency.setValueAtTime(64, t + at); h.frequency.exponentialRampToValueAtTime(26, t + at + .35);
+        hg.gain.setValueAtTime(0.0001, t + at); hg.gain.exponentialRampToValueAtTime(1.3 - k * .12, t + at + .02); hg.gain.exponentialRampToValueAtTime(0.0001, t + at + .45);
+        h.connect(hg); hg.connect(m); h.start(t + at); h.stop(t + at + .5);
+      });
+      // بوم تحت لما الصرخة تبدأ
+      const b = ctx.createOscillator(), bg = ctx.createGain(); b.frequency.setValueAtTime(70, t + 3.2); b.frequency.exponentialRampToValueAtTime(24, t + 4.6);
+      bg.gain.setValueAtTime(0.0001, t + 3.2); bg.gain.exponentialRampToValueAtTime(1.4, t + 3.25); bg.gain.exponentialRampToValueAtTime(0.0001, t + 5); b.connect(bg); bg.connect(m); b.start(t + 3.2); b.stop(t + 5.1);
+      const nb = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate), d = nb.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const n = ctx.createBufferSource(); n.buffer = nb;
+      const nf = ctx.createBiquadFilter(); nf.type = "lowpass"; nf.frequency.value = 110; const ng = ctx.createGain(); ng.gain.value = .9;
+      n.connect(nf); nf.connect(ng); ng.connect(m); n.start(t); lfo.start(t); lfo.stop(t + dur + .1);
+    },
+    // زمارة الحوت المفترسة: أول حاجة، لوحدها، عالية، وبصدى كهف طويل
+    horn() {
+      if (muted || !ready()) return;
+      const t = ctx.currentTime, dur = 5;
+      const m = ctx.createGain(); m.gain.setValueAtTime(0.0001, t);
+      m.gain.exponentialRampToValueAtTime(3.6, t + .45); m.gain.setValueAtTime(3.6, t + 2.2); m.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.Q.value = 2.5;
+      lp.frequency.setValueAtTime(260, t); lp.frequency.exponentialRampToValueAtTime(1400, t + .9); lp.frequency.exponentialRampToValueAtTime(420, t + dur);
+      lp.connect(m);
+      const dry = ctx.createGain(); dry.gain.value = 1; m.connect(dry); dry.connect(out);
+      const wet = ctx.createGain(); wet.gain.value = 2.2; wet.connect(out);
+      const rv = reverb(); m.connect(rv); rv.connect(wet);
+      const echo = ctx.createDelay(1.5); echo.delayTime.value = .62;
+      const fb = ctx.createGain(); fb.gain.value = .64; echo.connect(fb); fb.connect(echo); m.connect(echo); echo.connect(wet);
+      const lfo = ctx.createOscillator(); lfo.frequency.value = 5.3;
+      [[1, .5, "sawtooth"], [1.012, .5, "sawtooth"], [2, .32, "sine"], [3, .16, "sine"], [.5, .8, "sine"]].forEach(([k, vol, type]) => {
+        const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type;
+        o.frequency.setValueAtTime(52 * k, t); o.frequency.exponentialRampToValueAtTime(61 * k, t + .55);
+        o.frequency.exponentialRampToValueAtTime(57 * k, t + 2.2); o.frequency.exponentialRampToValueAtTime(45 * k, t + dur);
+        const d = ctx.createGain(); d.gain.value = .7 * k; lfo.connect(d); d.connect(o.frequency);
+        g.gain.value = vol; o.connect(g); g.connect(type === "sawtooth" ? lp : m); o.start(t); o.stop(t + dur + .1);
+      });
+      lfo.start(t); lfo.stop(t + dur + .1);
+    },
+    // طرطشة مية على الشاشة: ضربة موج + رذاذ
+    splash(big = true) {
+      if (muted || !ready()) return;
+      const t = ctx.currentTime, dur = big ? 1.5 : .7;
+      const nb = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate), d = nb.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const n = ctx.createBufferSource(); n.buffer = nb;
+      const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = .9; bp.frequency.setValueAtTime(3200, t); bp.frequency.exponentialRampToValueAtTime(420, t + dur);
+      const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(big ? .7 : .35, t + .03); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      n.connect(bp); bp.connect(g); g.connect(out); n.start(t);
+      if (big) { const o = ctx.createOscillator(), og = ctx.createGain(); o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(34, t + .6); og.gain.setValueAtTime(.6, t); og.gain.exponentialRampToValueAtTime(0.0001, t + .7); o.connect(og); og.connect(out); o.start(t); o.stop(t + .8); }
+    },
+    // صوت مية شديد (موج + غمر + فقاعات) شغّال طول ما الهيرو قدامك
+    startOcean() {
+      if (oceanG || !ready()) return;
+      oceanG = ctx.createGain(); oceanG.gain.value = 0; oceanG.connect(out);
+      const len = ctx.sampleRate * 6, buf = ctx.createBuffer(2, len, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) { const d = buf.getChannelData(c); let last = 0; for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + 0.04 * w) / 1.04; d[i] = last * 14; } }
+      const layer = (type, freq, q, base, lfoHz, lfoDepth) => {
+        const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+        const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+        const g = ctx.createGain(); g.gain.value = base;
+        const l = ctx.createOscillator(), ld = ctx.createGain(); l.frequency.value = lfoHz; ld.gain.value = lfoDepth; l.connect(ld); ld.connect(g.gain);
+        src.connect(f); f.connect(g); g.connect(oceanG); src.start(); l.start();
+      };
+      layer("lowpass", 420, .7, .95, .11, .5);     // الغمر العميق
+      layer("bandpass", 1300, .5, .42, .19, .26);  // رشّ الموج
+      layer("lowpass", 80, 1, 1, .07, .4);         // هدير تحت
+      layer("bandpass", 3200, 1.2, .1, .31, .08);  // فوارات
+      oceanLevel = .38; oceanG.gain.linearRampToValueAtTime(muted ? 0 : oceanLevel, ctx.currentTime + 2.2);
+          },
+    setOcean(level, secs = 1.5) { oceanLevel = level; if (oceanG && ctx) oceanG.gain.setTargetAtTime(muted ? 0 : level, ctx.currentTime, secs / 3); },
+    swell() { if (!oceanG || !ctx) return; const n = ctx.currentTime; oceanG.gain.setTargetAtTime(muted ? 0 : Math.min(.7, oceanLevel * 1.6), n, .8); oceanG.gain.setTargetAtTime(muted ? 0 : oceanLevel, n + 6, 1.6); },
+    stopRing() { ringNodes.forEach(o => { try { o.stop(); } catch (e) {} }); ringNodes = []; },
+    toggle() { muted = !muted; if (muted) this.stopRing(); if (oceanG) oceanG.gain.setTargetAtTime(muted ? 0 : oceanLevel, ctx.currentTime, .2); return muted; },
+    get muted() { return muted; }
+  };
+})();
+const muteBtn = $("#muteBtn");
+muteBtn.onclick = () => { const m = Sound.toggle(); muteBtn.textContent = m ? "🔇" : "🔊"; };
+$$(".dock a").forEach(a => a.addEventListener("mouseenter", Sound.tick));
+
+/* ================= Hero parallax + cursor glow ================= */
+(() => {
+  if (reduced || !finePointer) return;
+  const hero = $("#hero"), name = $("#heroName"), portrait = $("#portrait");
+  const cur = { x: 0, y: 0 }, tgt = { x: 0, y: 0 }; let raf = 0;
+  const loop = () => {
+    cur.x += (tgt.x - cur.x) * 0.08; cur.y += (tgt.y - cur.y) * 0.08;
+    portrait.style.setProperty("--px", `${cur.x * 14}px`);
+    portrait.style.setProperty("--py", `${cur.y * 8}px`);
+    name.style.setProperty("--tx", `${-cur.x * 26}px`);
+    name.style.setProperty("--ty", `${-cur.y * 18}px`);
+    hero.style.setProperty("--lx", `${50 + cur.x * 50}%`);
+    hero.style.setProperty("--ly", `${35 + cur.y * 40}%`);
+    raf = Math.abs(tgt.x - cur.x) + Math.abs(tgt.y - cur.y) > 0.001 ? requestAnimationFrame(loop) : 0;
+  };
+  hero.addEventListener("pointermove", e => {
+    const r = hero.getBoundingClientRect();
+    tgt.x = (e.clientX - r.left) / r.width - 0.5; tgt.y = (e.clientY - r.top) / r.height - 0.5;
+    if (!raf) raf = requestAnimationFrame(loop);
+  });
+  hero.addEventListener("pointerleave", () => { tgt.x = tgt.y = 0; if (!raf) raf = requestAnimationFrame(loop); });
+
+  // توهّج بيمشي ورا الماوس في الصفحة كلها
+  const glow = $("#glow"); let gx = innerWidth / 2, gy = innerHeight / 2, tx = gx, ty = gy;
+  addEventListener("pointermove", e => { tx = e.clientX; ty = e.clientY; glow.style.opacity = 1; });
+  (function g() { gx += (tx - gx) * 0.12; gy += (ty - gy) * 0.12; glow.style.transform = `translate(${gx}px,${gy}px)`; requestAnimationFrame(g); })();
+})();
+
+/* ================= Whale (realistic passing behind me) ================= */
+const WHALE_SVG = `<svg viewBox="0 0 820 330" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d2238"/><stop offset=".45" stop-color="#27506f"/><stop offset=".7" stop-color="#6f9bb8"/><stop offset="1" stop-color="#c3dae6"/>
+    </linearGradient>
+    <linearGradient id="wf" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#040814" stop-opacity="0"/><stop offset=".55" stop-color="#040814" stop-opacity="0"/><stop offset="1" stop-color="#0b1c36" stop-opacity=".55"/>
+    </linearGradient>
+    <filter id="wn" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".012 .06" numOctaves="4" seed="9"/><feColorMatrix type="matrix" values="0 0 0 0 .02  0 0 0 0 .08  0 0 0 0 .14  0 0 0 1.6 -.5"/></filter>
+    <filter id="wbl"><feGaussianBlur stdDeviation="7"/></filter>
+    <radialGradient id="wl" cx=".35" cy=".1" r=".7"><stop offset="0" stop-color="#bfeaff" stop-opacity=".55"/><stop offset="1" stop-color="#bfeaff" stop-opacity="0"/></radialGradient>
+    <clipPath id="wc"><path id="wbody" d="M40,150 C40,108 112,68 224,60 C334,50 444,68 544,98 C614,120 668,138 716,142 C742,120 766,98 794,86 C782,112 760,130 744,148 C760,158 782,178 796,210 C766,198 740,178 716,158 C640,194 520,244 380,254 C250,262 120,232 70,192 C50,178 40,166 40,150 Z"/></clipPath>
+  </defs>
+  <use href="#wbody" fill="url(#wb)"/>
+  <g clip-path="url(#wc)">
+    <rect x="0" y="0" width="820" height="330" fill="url(#wl)"/>
+    <g stroke="#0a1a2c" stroke-opacity=".28" stroke-width="2" fill="none" stroke-linecap="round">
+      <path d="M70,196 C150,226 260,242 380,244"/><path d="M82,208 C160,236 272,250 392,252"/><path d="M96,186 C170,212 270,226 372,230"/>
+      <path d="M110,218 C190,244 290,254 396,256"/><path d="M60,182 C130,204 230,214 330,216"/>
+    </g>
+    <g fill="#d9ecf5" fill-opacity=".35"><circle cx="150" cy="104" r="3"/><circle cx="168" cy="98" r="2.4"/><circle cx="190" cy="110" r="2.8"/><circle cx="132" cy="120" r="2.2"/><circle cx="210" cy="96" r="2"/></g>
+    <rect x="0" y="0" width="820" height="330" filter="url(#wn)" opacity=".55"/>
+    <g class="caustic" filter="url(#wbl)" fill="none" stroke="#e6f9ff" stroke-linecap="round">
+      <path d="M0,86 C110,52 200,112 310,70 S520,48 640,92 S780,80 840,66" stroke-width="16" stroke-opacity=".26"/>
+      <path d="M0,150 C120,118 230,176 340,132 S560,112 690,158 S800,146 850,132" stroke-width="12" stroke-opacity=".18"/>
+      <path d="M0,214 C130,186 240,236 350,196 S560,182 700,222" stroke-width="10" stroke-opacity=".14"/>
+    </g>
+    <rect x="0" y="0" width="820" height="330" fill="url(#wf)"/>
+  </g>
+  <path d="M244,226 C214,272 172,304 138,316 C176,288 220,256 264,238 Z" fill="#5d86a3"/>
+  <path d="M598,112 C610,90 626,90 634,118 Z" fill="#1d3a55"/>
+  <path d="M52,172 C122,192 202,198 292,192" stroke="#07131f" stroke-opacity=".55" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <circle cx="96" cy="162" r="4.4" fill="#050b12"/><circle cx="94.6" cy="160.6" r="1.4" fill="#cfe9f7"/>
+</svg>`;
+(() => {
+  const layer = $("#whaleLayer");
+  const body = DATA.whaleImg ? `<img src="${DATA.whaleImg}" alt="" />` : WHALE_SVG;
+  layer.innerHTML = `<div class="whale">${body}</div><div class="whale calf">${body}</div>`;
+  if (DATA.whaleImg) layer.classList.add("img");
+  if (reduced) layer.remove();
+})();
+
+/* ================= Water on the screen (قطرات وطرطشة على الشاشة) ================= */
+const Water = (() => {
+  const cv = $("#drops"), c = cv.getContext("2d"), hero = $("#hero");
+  let drops = [], raf = 0, W = 0, H = 0, dpr = 1;
+  const resize = () => { dpr = Math.min(devicePixelRatio, 2); W = hero.clientWidth; H = hero.clientHeight; cv.width = W * dpr; cv.height = H * dpr; c.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  new ResizeObserver(resize).observe(hero); resize();
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  function spawn(n, big) {
+    for (let i = 0; i < n; i++) {
+      const mist = Math.random() < .72;
+      drops.push({ x: rnd(0, W), y: rnd(-20, H * .85), r: mist ? rnd(1.2, 3) : rnd(3.5, big ? 8.5 : 6), vy: 0, slip: !mist && Math.random() < .7, life: 1, age: 0, ttl: rnd(4, 9), trail: [], wait: rnd(0, big ? .5 : .2) });
+    }
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+  function tick() {
+    c.clearRect(0, 0, W, H);
+    for (const d of drops) {
+      if (d.wait > 0) { d.wait -= 1 / 60; continue; }
+      d.age += 1 / 60;
+      if (d.slip && d.r > 5 && d.age > .5) {
+        d.vy += (Math.random() < .08 ? rnd(.05, .4) : 0) - d.vy * .05; if (d.vy < 0) d.vy = 0;
+        if (d.vy > .05) { d.trail.push([d.x, d.y, d.r * .45]); if (d.trail.length > 30) d.trail.shift(); }
+        d.y += d.vy * (d.r / 7); d.r *= .9993;
+      }
+      d.life = d.age > d.ttl - 1.4 ? Math.max(0, (d.ttl - d.age) / 1.4) : 1;
+      // أثر القطرة وهي بتنزل
+      if (d.trail.length) { c.lineCap = "round"; for (let i = 1; i < d.trail.length; i++) { const a = d.trail[i - 1], b = d.trail[i]; c.strokeStyle = `rgba(190,230,255,${.1 * d.life * i / d.trail.length})`; c.lineWidth = b[2]; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke(); } }
+      // القطرة نفسها: عدسة صغيرة (انكسار + لمعة + ظل)
+      const r = d.r, g = c.createRadialGradient(d.x - r * .3, d.y - r * .35, r * .05, d.x, d.y, r);
+      g.addColorStop(0, `rgba(255,255,255,${.55 * d.life})`); g.addColorStop(.25, `rgba(210,240,255,${.16 * d.life})`);
+      g.addColorStop(.8, `rgba(120,190,255,${.1 * d.life})`); g.addColorStop(1, `rgba(0,10,40,${.38 * d.life})`);
+      c.fillStyle = g; c.beginPath(); c.ellipse(d.x, d.y, r, r * 1.08, 0, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = `rgba(255,255,255,${.35 * d.life})`; c.lineWidth = 1; c.beginPath(); c.arc(d.x, d.y, r * .98, Math.PI * 1.05, Math.PI * 1.6); c.stroke();
+    }
+    drops = drops.filter((d) => d.age < d.ttl && d.y < H + 40);
+    raf = drops.length ? requestAnimationFrame(tick) : (c.clearRect(0, 0, W, H), 0);
+  }
+  return {
+    splash(big = true) {
+      if (reduced) return;
+      spawn(big ? 22 : 8, big);
+      const f = $("#splashFlash"); f.style.setProperty("--fx", `${rnd(20, 80)}%`); f.style.setProperty("--fy", `${rnd(20, 70)}%`);
+      gsap.fromTo(f, { opacity: big ? .3 : .15 }, { opacity: 0, duration: big ? 1 : .6, ease: "power2.out" });
+    }
+  };
+})();
+
+/* ================= Glass folders ================= */
+const folders = $$(".gfolder");
+folders.forEach(f => {
+  const front = f.querySelector(".front");
+  f.addEventListener("pointermove", e => {
+    const r = front.getBoundingClientRect();
+    front.style.setProperty("--sx", `${((e.clientX - r.left) / r.width) * 100}%`);
+    front.style.setProperty("--sy", `${((e.clientY - r.top) / r.height) * 100}%`);
+  });
+  f.addEventListener("mouseenter", Sound.tick);
+  const toggle = () => {
+    const opening = !f.classList.contains("open");
+    folders.forEach(x => { x.classList.remove("open"); x.setAttribute("aria-expanded", "false"); });
+    if (opening) { f.classList.add("open"); f.setAttribute("aria-expanded", "true"); setTimeout(() => Sound.pop(1.3), 180); }
+    Sound.whoosh(opening);
+  };
+  front.addEventListener("click", toggle);
+  f.addEventListener("keydown", e => { if (e.target === f && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggle(); } });
+});
+// فولدر "عندك براند؟": اختار الخدمات وابعتها على واتساب جاهزة
+(() => {
+  const opts = $$("#insideBrief .opt"), send = $("#briefSend");
+  const update = () => {
+    const picked = opts.filter(o => o.classList.contains("on")).map(o => o.textContent);
+    const msg = "أهلاً حوت الميديا 👋" + (picked.length ? " أنا محتاج: " + picked.join("، ") : " عايز أعرف أكتر عن خدماتكم");
+    send.href = `https://wa.me/${DATA.whatsapp}?text=${encodeURIComponent(msg)}`;
+  };
+  opts.forEach(o => o.addEventListener("click", () => { o.classList.toggle("on"); Sound.tick(); update(); }));
+  update();
+})();
+
+/* ================= Phone + Nokia ring ================= */
+const phone = $("#phone"), phoneLabel = $("#phoneLabel");
+let ringTimer = 0, ringing = false, hitTimers = [];
+const clearHits = () => { hitTimers.forEach(clearTimeout); hitTimers = []; phone.classList.remove("hit"); };
+function stopRing() {
+  ringing = false; clearTimeout(ringTimer); clearHits(); Sound.stopRing();
+  phone.classList.remove("ringing"); phoneLabel.textContent = "دوس على التليفون لو عايز الرنّة تاني";
+}
+function startRing() {
+  if (ringing) return;
+  ringing = true; phone.classList.add("ringing"); phoneLabel.textContent = "";
+  if (Sound.ready() && !Sound.muted) {
+    const { total, notes } = Sound.nokia(3);
+    notes.forEach(([at, dur]) => {
+      hitTimers.push(setTimeout(() => phone.classList.add("hit"), at * 1000));
+      hitTimers.push(setTimeout(() => phone.classList.remove("hit"), (at + dur) * 1000));
+    });
+    ringTimer = setTimeout(stopRing, total * 1000);
+  } else { phone.classList.add("hit"); ringTimer = setTimeout(stopRing, 9000); }
+}
+phone.onclick = () => (ringing ? stopRing() : startRing());
+// أول ما يوصل لآخر الصفحة الرنّة تشتغل لوحدها
+function autoRing() {
+  if (ringing) return;
+  if (Sound.ready()) return startRing();
+  ringing = true; phone.classList.add("ringing", "hit");
+  phoneLabel.textContent = "دوس في أي مكان عشان تسمع الرنّة 🔊";
+  Sound.onUnlock(() => { ringing = false; phone.classList.remove("ringing"); clearHits(); startRing(); });
+}
+
+/* ================= Lead form -> WhatsApp ================= */
+$("#lead").addEventListener("submit", e => {
+  e.preventDefault();
+  const name = $("#fName").value.trim(), mail = $("#fMail").value.trim(), idea = $("#fIdea").value.trim();
+  if (!name) {
+    const f = $("#fName").parentElement; f.classList.remove("bad"); void f.offsetWidth; f.classList.add("bad");
+    $("#fName").focus(); $("#leadNote").textContent = "اكتب اسمك الأول عشان أعرف أناديك بإيه 😉"; Sound.pop(.7); return;
+  }
+  const msg = [
+    "🐋🌊 *حوت الميديا* 🌊🐋",
+    "━━━━━━━━━━━━━━",
+    `أهلاً حوت! أنا *${name}* 👋`,
+    `✉️ إيميلي: ${mail || "—"}`,
+    "",
+    "💡 *فكرتي:*",
+    `❝ ${idea || "لسه بفكّر.. وعايز نتكلم الأول"} ❞`,
+    "",
+    "يلا نكبّر البراند سوا 🚀"
+  ].join("\n");
+  $("#leadNote").textContent = "جاري فتح الواتساب… 🐋";
+  Sound.pop(1.5); Sound.whoosh(true);
+  window.open(`https://wa.me/${DATA.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+});
+
+/* ================= GSAP ================= */
+gsap.registerPlugin(ScrollTrigger);
+const N = 70;
+const qs = $("#qs");
+qs.innerHTML = "<i>؟</i>".repeat(N);
+const marks = [...qs.children];
+
+// عدّاد العملاء
+const countTo = (el, n) => { const o = { v: 0 }; gsap.to(o, { v: n, duration: 1.6, ease: "power2.out", onUpdate: () => el.textContent = Math.round(o.v) }); };
+
+// الـ loader
+const T0 = reduced || ADMIN ? 0 : 1.7;
+setTimeout(() => $("#loader")?.remove(), 5000); // أمان: الـ loader مايعلقش أبدًا
+if (reduced || ADMIN) $("#loader").remove(); else {
+  const l = gsap.timeline({ onComplete: () => $("#loader")?.remove() });
+  l.from("#loader img", { scale: .4, opacity: 0, duration: .6, ease: "back.out(2)" })
+   .to("#loader .bar i", { scaleX: 1, duration: .9, ease: "power2.inOut" }, "<.1")
+   .to("#loader .in", { scale: .8, opacity: 0, duration: .35 })
+   .to("#loader", { yPercent: -100, duration: .8, ease: "expo.inOut" }, "-=.1");
+}
+
+if (!reduced) {
+  // الحوت يبدأ يعدّي بعد الـ loader، ونداءه المخيف مع كل عبور
+  // كل 32 ثانية الحوت يعدّي بسرعة، وبعد ثانيتين ونص ينده بصوته مع صوت المية وطرطشة على الشاشة
+  const callWhale = () => {
+    Sound.splash(true); Water.splash(true); Sound.whale(); dispatchEvent(new Event("whale-call"));
+    setTimeout(() => { Sound.splash(false); Water.splash(false); }, 1700);
+    setTimeout(() => { Sound.splash(false); Water.splash(false); }, 3600);
+    gsap.fromTo(".dread", { opacity: .35 }, { opacity: .9, duration: 1.4, yoyo: true, repeat: 1, ease: "sine.inOut" });
+    gsap.fromTo("#hero", { x: -5 }, { x: 0, duration: 1.4, ease: "elastic.out(1,.12)" });
+    // الجو يحمرّ في الضلمة ويدق مع نبضات القلب في الصوت
+    const hb = gsap.timeline();
+    hb.to(".abyss", { opacity: .45, duration: 2.2, ease: "sine.inOut" });
+    [[4.9, .95], [5.5, .9], [6.5, .85], [7.1, .8]].forEach(([at, v]) => hb.to(".abyss", { opacity: v, duration: .1 }, at).to(".abyss", { opacity: .4, duration: .35 }, at + .1));
+    hb.to(".abyss", { opacity: 0, duration: 2.4 }, 8);
+  };
+  addEventListener("whale-pass", () => { setTimeout(() => Sound.horn(), 250); setTimeout(callWhale, 3600); });
+  setTimeout(() => {
+    $("#hero").classList.add("go");
+    const pass = () => dispatchEvent(new Event("whale-pass")); pass(); setInterval(pass, 32000);
+  }, T0 * 1000);
+  Sound.onUnlock(() => { setTimeout(() => Sound.horn(), 300); setTimeout(callWhale, 3700); });
+  ScrollTrigger.create({ trigger: "#hero", start: "top top", end: "bottom 30%", onLeave: () => Sound.setOcean(0, 1.4), onEnterBack: () => Sound.setOcean(.38, 1.4) });
+  // شريط التقدم
+  ScrollTrigger.create({ start: 0, end: "max", onUpdate: s => $("#progress").style.transform = `scaleX(${s.progress})` });
+
+  // دخول الهيرو
+  gsap.from("#heroName > span > span", { yPercent: 120, opacity: 0, duration: 1.2, ease: "expo.out", stagger: 0.15, delay: T0 });
+  gsap.from("#portrait", { yPercent: 18, opacity: 0, duration: 1.5, ease: "expo.out", delay: T0 });
+  gsap.from(".cta", { y: 30, opacity: 0, duration: 1, delay: T0 + .6, ease: "expo.out" });
+  gsap.from(".bento .tile", { y: 80, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.08, scrollTrigger: { trigger: ".bento", start: "top 90%" } });
+  gsap.from(".stack .app", { x: 120, rotate: 25, opacity: 0, duration: 1.1, ease: "back.out(1.6)", stagger: 0.09, scrollTrigger: { trigger: ".bento", start: "top 85%" } });
+  ScrollTrigger.create({ trigger: "#clients", start: "top 85%", once: true, onEnter: () => countTo($("#clientsN"), DATA.clients) });
+
+  // الجملة الكبيرة
+  const words = gsap.utils.toArray("#stmt .w");
+  let lit = 0;
+  gsap.timeline({ scrollTrigger: { trigger: "#statement", start: "top top", end: "+=150%", pin: true, scrub: 0.8,
+      onUpdate: s => { const n = Math.round(s.progress * words.length); if (n > lit) Sound.tick(); lit = n; } } })
+    .to(words, { opacity: 1, stagger: 0.1, ease: "none" });
+
+  // الكروت + إمالة 3D مع الماوس
+  gsap.from(".card3d", { y: 100, opacity: 0, duration: 1.1, ease: "expo.out", stagger: 0.1, scrollTrigger: { trigger: "#team", start: "top 80%" } });
+  gsap.from(".ico3d", { rotate: -40, scale: 0.6, duration: 1.4, ease: "elastic.out(1, .6)", stagger: 0.1, scrollTrigger: { trigger: "#team", start: "top 80%" } });
+  if (finePointer) $$(".card3d").forEach(c => {
+    const ico = c.querySelector(".ico3d");
+    c.addEventListener("pointermove", e => { const r = c.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      gsap.to(ico, { rotateY: x * 40, rotateX: -y * 40, scale: 1.1, duration: .4, transformPerspective: 600 }); });
+    c.addEventListener("pointerleave", () => gsap.to(ico, { rotateY: 0, rotateX: 0, scale: 1, duration: .8, ease: "elastic.out(1,.5)" }));
+  });
+
+  // الشريط المتحرك بيتزحزح مع السكرول
+  gsap.to(".band .track", { x: "-=240", ease: "none", scrollTrigger: { trigger: ".band", scrub: 1, start: "top bottom", end: "bottom top" } });
+
+  // الخدمات
+  gsap.utils.toArray(".svc-row").forEach((row, i) => {
+    gsap.from(row, { x: -80, opacity: 0, duration: 0.9, ease: "expo.out",
+      scrollTrigger: { trigger: row, start: "top 88%", onEnter: () => Sound.pop(1 + i * 0.1) } });
+  });
+
+  // هنعمل إيه؟ وإزاي؟
+  gsap.timeline({ scrollTrigger: { trigger: "#whathow", start: "top top", end: "+=180%", pin: true, scrub: 0.8 } })
+    .from("#whathow .r1", { xPercent: 60, opacity: 0, ease: "power2.out" })
+    .from("#whathow .r1 .ltile", { rotate: -180, scale: 0, ease: "back.out(2)" }, "<")
+    .from("#whathow .r2", { xPercent: -60, opacity: 0, ease: "power2.out" })
+    .from("#whathow .r2 .ltile", { rotate: 180, scale: 0, ease: "back.out(2)" }, "<")
+    .to("#whathow .row", { scale: 1.08, ease: "none" });
+
+  // ليه نضيّع وقت؟؟؟ — استفهام كبير بعيد، تاني، تالت، وبعدين الباقي ورا بعض، وكل واحد بصوت
+  const giants = $$(".gq"), GT = [0.06, 0.16, 0.26], TITLE_AT = 0.36, M0 = 0.44, M1 = 0.97;
+  gsap.set(giants, { opacity: 0, scale: .3 });
+  gsap.set(marks, { opacity: 0, scale: 0 });
+  gsap.set("#whyTitle", { y: 40 });
+  let gShown = 0, titleOn = false, mShown = 0;
+  ScrollTrigger.create({
+    trigger: "#why", start: "top top", end: "+=500%", pin: true,
+    onUpdate: s => {
+      const p = s.progress;
+      const gTarget = GT.filter(t => p >= t).length;
+      while (gShown < gTarget) { const g = giants[gShown]; gsap.to(g, { opacity: .3, scale: 1, rotate: gsap.utils.random(-14, 14), duration: .9, ease: "back.out(2.2)" }); Sound.pop(.42 + gShown * .14); gShown++; }
+      while (gShown > gTarget) { gShown--; gsap.to(giants[gShown], { opacity: 0, scale: .3, duration: .35 }); }
+      const tOn = p >= TITLE_AT;
+      if (tOn !== titleOn) { titleOn = tOn; gsap.to("#whyTitle", { opacity: tOn ? 1 : 0, y: tOn ? 0 : 40, duration: .7, ease: "expo.out" }); if (tOn) Sound.whoosh(true); }
+      const mTarget = p < M0 ? 0 : Math.min(N, Math.ceil((p - M0) / (M1 - M0) * N));
+      while (mShown < mTarget) { gsap.to(marks[mShown], { opacity: 1, scale: 1, rotate: gsap.utils.random(-16, 16), duration: .45, ease: "back.out(3)" }); Sound.pop(.8 + (mShown / N) * 1.1); mShown++; }
+      while (mShown > mTarget) { mShown--; gsap.to(marks[mShown], { opacity: 0, scale: 0, duration: .2 }); }
+    }
+  });
+
+  // الاتصال — الرنّة تشتغل أول ما توصل
+  gsap.from(".contact h2", { y: 100, opacity: 0, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: ".contact", start: "top 80%" } });
+  ScrollTrigger.create({ trigger: "#contact", start: "top 55%", end: "bottom top", onEnter: autoRing, onLeave: () => ringing && stopRing(), onLeaveBack: () => ringing && stopRing() });
+
+  // أزرار مغناطيسية
+  if (finePointer) $$(".mag").forEach(b => {
+    b.addEventListener("pointermove", e => { const r = b.getBoundingClientRect(); gsap.to(b, { x: (e.clientX - r.left - r.width / 2) * .3, y: (e.clientY - r.top - r.height / 2) * .4, duration: .3 }); });
+    b.addEventListener("pointerleave", () => gsap.to(b, { x: 0, y: 0, duration: .8, ease: "elastic.out(1,.4)" }));
+  });
+} else {
+  $("#clientsN").textContent = DATA.clients;
+  ScrollTrigger.create({ trigger: "#contact", start: "top 55%", onEnter: autoRing });
+}
+document.fonts.ready.then(() => ScrollTrigger.refresh());
+if (ADMIN) addEventListener("message", e => { if (e.data && e.data.goto) { const el = document.querySelector(e.data.goto); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - 70, behavior: "smooth" }); } });
+</script>
+<script type="module">
+/* ============ حوت 3D حقيقي (three.js) بيعدّي من ورا صورتك ============ */
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+const layer = document.getElementById("whaleLayer");
+const hero = document.getElementById("hero");
+if (layer && hero && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  let renderer = null;
+  try { renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" }); } catch (e) { renderer = null; }
+  if (renderer) (typeof DATA !== "undefined" && DATA.whaleImg ? bootImage : boot)(renderer);
+}
+
+function boot(renderer) {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.setClearColor(0x000000, 0);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  const cv = renderer.domElement; cv.className = "whale3d"; layer.appendChild(cv);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 200);
+  camera.position.set(0, 0.4, 15);
+
+  // إضاءة مرعبة: سماوي من فوق، بينك من تحت، وعين بتنوّر
+  scene.add(new THREE.HemisphereLight(0x2a5d8f, 0x03060f, 0.5));
+  const key = new THREE.DirectionalLight(0x6fe3ff, 1.7); key.position.set(-6, 10, 7); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xc2307f, 1.1); rim.position.set(9, -5, -6); scene.add(rim);
+
+  const uni = { uTime: { value: 0 } };
+  const bend = (mat) => { // تموّج الجسم كله زي السباحة الحقيقية
+    mat.onBeforeCompile = (sh) => {
+      sh.uniforms.uTime = uni.uTime;
+      sh.vertexShader = "attribute float aU;\nuniform float uTime;\n" + sh.vertexShader.replace("#include <begin_vertex>", `
+        vec3 transformed = vec3(position);
+        float w = aU * aU;
+        transformed.y += sin(aU * 5.5 - uTime * 1.9) * 0.55 * w;
+        transformed.z += sin(aU * 4.0 - uTime * 1.9 + 1.0) * 0.14 * w;`);
+    };
+    return mat;
+  };
+
+  /* ---------- الجسم ---------- */
+  const L = 16, R = 2.05;
+  const prof = [[0, 0], [.012, .26], [.045, .55], [.11, .82], [.2, .97], [.36, 1], [.5, .88], [.64, .6], [.76, .38], [.87, .2], [.95, .11], [1, .08]];
+  const curve = new THREE.CatmullRomCurve3(prof.map(([u, r]) => new THREE.Vector3(u, r, 0)), false, "centripetal");
+  const table = curve.getPoints(600);
+  const radiusAt = (u) => { let lo = 0, hi = table.length - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; table[m].x < u ? lo = m : hi = m; } return Math.max(0, table[lo].y + (table[hi].y - table[lo].y) * ((u - table[lo].x) / ((table[hi].x - table[lo].x) || 1))) * R; };
+  const hash = (x, y) => { const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return s - Math.floor(s); };
+  const noise = (x, y) => { const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi; const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf); return (hash(xi, yi) * (1 - u) + hash(xi + 1, yi) * u) * (1 - v) + (hash(xi, yi + 1) * (1 - u) + hash(xi + 1, yi + 1) * u) * v; };
+
+  const NU = 140, NV = 40, pos = [], col = [], au = [], idx = [];
+  const back = new THREE.Color(0x07111c), flank = new THREE.Color(0x1b3a52), belly = new THREE.Color(0xa9bfca), scar = new THREE.Color(0xcfdde4);
+  for (let i = 0; i <= NU; i++) {
+    const u = i / NU, r = radiusAt(u);
+    for (let j = 0; j <= NV; j++) {
+      const th = (j / NV) * Math.PI * 2, c = Math.cos(th), s = Math.sin(th);
+      const squash = c > 0 ? 0.92 : 0.8;
+      pos.push((u - 0.5) * L, r * c * squash, r * s);
+      au.push(u);
+      // لون: ضهر غامق → جنب أزرق → بطن فاتح + خطوط البطن + ندبات
+      const t = THREE.MathUtils.smoothstep(-c, -0.1, 0.55);
+      const k = new THREE.Color().copy(back).lerp(flank, THREE.MathUtils.smoothstep(-c, -0.7, 0.2)).lerp(belly, t);
+      const pleat = c < -0.25 ? 0.86 + 0.14 * Math.sin(th * 26) : 1; k.multiplyScalar(pleat);
+      const n = noise(u * 38, th * 3.2), n2 = noise(u * 90 + 5, th * 9);
+      if (n > 0.78) k.lerp(scar, (n - 0.78) * 3.2);
+      if (n2 > 0.86 && c > -0.3) k.lerp(scar, 0.55);
+      col.push(k.r, k.g, k.b);
+    }
+  }
+  for (let i = 0; i < NU; i++) for (let j = 0; j < NV; j++) { const a = i * (NV + 1) + j, b = a + NV + 1; idx.push(a, b, a + 1, b, b + 1, a + 1); }
+  const bodyGeo = new THREE.BufferGeometry();
+  bodyGeo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  bodyGeo.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
+  bodyGeo.setAttribute("aU", new THREE.Float32BufferAttribute(au, 1));
+  bodyGeo.setIndex(idx); bodyGeo.computeVertexNormals();
+
+  const withU = (geo, v) => { geo.setAttribute("aU", new THREE.Float32BufferAttribute(new Float32Array(geo.attributes.position.count).fill(v), 1)); return geo; };
+  const darkMat = () => bend(new THREE.MeshStandardMaterial({ color: 0x0b1a2a, roughness: 0.55, metalness: 0.05, transparent: true }));
+  const paleMat = () => new THREE.MeshStandardMaterial({ color: 0x86a7b9, roughness: 0.5, transparent: true });
+
+  // الديل
+  const fl = new THREE.Shape();
+  fl.moveTo(0, 0.28); fl.bezierCurveTo(0.7, 0.5, 1.5, 1.4, 2.5, 2.3); fl.bezierCurveTo(2.2, 1.3, 1.5, 0.9, 0.8, 0.34); fl.lineTo(0.55, 0);
+  fl.lineTo(0.8, -0.34); fl.bezierCurveTo(1.5, -0.9, 2.2, -1.3, 2.5, -2.3); fl.bezierCurveTo(1.5, -1.4, 0.7, -0.5, 0, -0.28); fl.lineTo(0, 0.28);
+  const flGeo = new THREE.ExtrudeGeometry(fl, { depth: 0.16, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05, bevelSegments: 2, curveSegments: 16 });
+  flGeo.rotateX(-Math.PI / 2); flGeo.translate(0, -0.08, 0); withU(flGeo, 1);
+
+  // الزعانف الصدرية الطويلة
+  const fin = new THREE.Shape();
+  fin.moveTo(0, 0); fin.bezierCurveTo(0.8, 0.5, 2.2, 0.45, 3.5, -0.2); fin.bezierCurveTo(2.4, -0.2, 1.1, -0.35, 0, -0.35); fin.lineTo(0, 0);
+  const finGeo = new THREE.ExtrudeGeometry(fin, { depth: 0.1, bevelEnabled: true, bevelSize: 0.04, bevelThickness: 0.04, bevelSegments: 2, curveSegments: 14 });
+  withU(finGeo, 0.38);
+
+  // العين
+  const eyeGeo = new THREE.SphereGeometry(0.1, 20, 16);
+
+  function makeWhale() {
+    const g = new THREE.Group();
+    const bodyMat = bend(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.5, metalness: 0.08, transparent: true }));
+    g.add(new THREE.Mesh(bodyGeo, bodyMat));
+    const tail = new THREE.Mesh(flGeo, darkMat()); tail.position.set(L / 2 - 0.12, 0, 0); g.add(tail);
+    const fins = [1, -1].map((side) => {
+      const m = new THREE.Mesh(finGeo, paleMat());
+      m.position.set(-L * 0.17, -R * 0.62, side * R * 0.78);
+      m.rotation.set(side * 0.9, side * 0.35, -0.5);
+      g.add(m); return m;
+    });
+    // خط الفك
+    const jaw = [], z0 = (x, y) => Math.sqrt(Math.max(0, 1 - Math.pow(y / (radiusAt((x / L) + 0.5) * 0.88 + 0.001), 2))) * radiusAt((x / L) + 0.5);
+    [[-7.9, -0.28], [-6.8, -0.72], [-5.4, -0.9], [-3.8, -0.98], [-2.4, -0.95]].forEach(([x, y]) => jaw.push(new THREE.Vector3(x, y, z0(x, y) + 0.015)));
+    const jawMat = new THREE.MeshBasicMaterial({ color: 0x010409, transparent: true });
+    const jawTube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(jaw), 40, 0.045, 6), jawMat);
+    g.add(jawTube);
+    // العينين بتنوّر في الضلمة
+    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xd9f8ff, transparent: true });
+    const eyes = [1, -1].map((side) => { const e = new THREE.Mesh(eyeGeo, eyeMat); e.position.set(-5.7, 0.12, side * (radiusAt(0.5 - 5.7 / L) * 0.97)); g.add(e); return e; });
+    const eyeLight = new THREE.PointLight(0x9fe9ff, 0.8, 7, 2); eyeLight.position.set(-5.5, 0.2, 2.2); g.add(eyeLight);
+    return { g, fins, eyeMat, eyeLight, mats: [bodyMat, tail.material, ...fins.map((f) => f.material), jawMat, eyeMat] };
+  }
+
+  const big = makeWhale(), calf = makeWhale();
+  calf.g.scale.setScalar(0.4);
+  scene.add(big.g, calf.g);
+  big.g.visible = calf.g.visible = false;
+
+  /* ---------- العبور ---------- */
+  const DUR = 10.5, CALF_DELAY = 1.3;
+  let passAt = -1e9, pulse = 0, running = false, visible = true;
+  const clock = new THREE.Clock();
+  const smooth = THREE.MathUtils.smoothstep;
+  const place = (w, p, x0, x1, y, z, opacity) => {
+    w.g.visible = p > 0 && p < 1;
+    if (!w.g.visible) return;
+    w.g.position.set(THREE.MathUtils.lerp(x0, x1, p), y + Math.sin(p * Math.PI * 2) * 0.5, z);
+    w.g.rotation.set(0, 0.14 + Math.sin(p * 6) * 0.05, Math.sin(p * Math.PI * 2 - 1.2) * 0.04);
+    const o = smooth(p, 0, 0.14) * (1 - smooth(p, 0.86, 1)) * opacity;
+    w.mats.forEach((m) => { m.opacity = o; });
+    w.fins.forEach((f, i) => { f.rotation.x = (i ? -1 : 1) * (0.9 + Math.sin(uni.uTime.value * 1.3) * 0.12); });
+    const glow = 0.8 + pulse * 2.8 + Math.sin(uni.uTime.value * 2.2) * 0.2;
+    w.eyeLight.intensity = glow * o; w.eyeMat.color.setScalar(1).multiplyScalar(0.8 + pulse * 0.4);
+  };
+
+  function frame() {
+    requestAnimationFrame(frame);
+    if (!visible || document.hidden) return;
+    const now = performance.now() / 1000, t = now - passAt;
+    pulse *= 0.96;
+    if (t < 0 || t > DUR + CALF_DELAY + 1) { if (running) { renderer.clear(); running = false; } return; }
+    running = true;
+    uni.uTime.value += clock.getDelta();
+    place(big, t / DUR, 22, -22, 1.5, -1.5, 0.96);
+    place(calf, (t - CALF_DELAY) / DUR, 30, -26, -2.2, -11, 0.55);
+    renderer.render(scene, camera);
+  }
+  frame();
+
+  const resize = () => {
+    const w = layer.clientWidth || 1, h = layer.clientHeight || 1;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.position.z = 15 * Math.max(1, 1.55 / (w / h)); camera.updateProjectionMatrix();
+  };
+  new ResizeObserver(resize).observe(layer); resize();
+  new IntersectionObserver((e) => { visible = e[0].isIntersecting; }, { threshold: 0 }).observe(hero);
+
+  addEventListener("whale-pass", () => { passAt = performance.now() / 1000; });
+  addEventListener("whale-call", () => { pulse = 1; });
+  addEventListener("pointermove", (e) => { camera.position.x = (e.clientX / innerWidth - 0.5) * 1.2; camera.position.y = 0.4 - (e.clientY / innerHeight - 0.5) * 0.6; camera.lookAt(0, 0.4, 0); }, { passive: true });
+
+  window.__w3d = true; document.body.classList.add("w3d");
+}
+
+/* ============ صورة الحوت بتاعتك بتتحرك: جسم بيتموّج + ديل + زعانف بتخبط + عين حمرا ============ */
+function bootImage(renderer) {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.setClearColor(0x000000, 0);
+  const cv = renderer.domElement; cv.className = "whale3d"; layer.appendChild(cv);
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -100, 100);
+  const uTime = { value: 0 }, uPulse = { value: 0 };
+
+  const vert = `
+    varying vec2 vUv; uniform float uTime, uSeed;
+    float box(vec2 u, vec2 lo, vec2 hi) { vec2 a = smoothstep(lo - .03, lo + .03, u); vec2 b = 1. - smoothstep(hi - .03, hi + .03, u); return a.x * a.y * b.x * b.y; }
+    vec2 rot(vec2 p, vec2 c, float a) { vec2 d = p - c; float s = sin(a), k = cos(a); return c + vec2(k * d.x - s * d.y, s * d.x + k * d.y); }
+    void main() {
+      vUv = uv; vec2 p = position.xy; vec2 u = uv; float t = uTime + uSeed;
+      // الزعنفة الكبيرة: بتتحرك من الكتف
+      vec2 pv1 = vec2(.417, .444);
+      float w1 = box(u, vec2(.05, .03), vec2(.47, .47)) * smoothstep(.04, .3, distance(u, pv1));
+      p = rot(p, pv1 - .5, sin(t * 1.9) * .42 * w1);
+      // الزعنفة الصغيرة
+      vec2 pv2 = vec2(.57, .35);
+      float w2 = box(u, vec2(.5, .1), vec2(.68, .38)) * smoothstep(.02, .16, distance(u, pv2));
+      p = rot(p, pv2 - .5, sin(t * 1.9 + 1.7) * .5 * w2);
+      // الديل: ضربة قوية، والجسم كله بيتموّج
+      float tail = smoothstep(.62, .0, u.x);
+      p.y += sin(t * 2.4 - u.x * 5.) * .05 * (.25 + tail * 1.3);
+      p = rot(p, vec2(-.1, 0.), sin(t * 2.4 - 1.2) * .24 * tail * tail);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(p, position.z, 1.);
+    }`;
+  const frag = `
+    varying vec2 vUv; uniform sampler2D map; uniform float uOpacity, uPulse, uTime, uDark;
+    void main() {
+      vec4 c = texture2D(map, vUv);
+      vec3 col = c.rgb * vec3(.62, .78, .95) * uDark;                 // لون بارد مظلم
+      col = mix(col, col * vec3(.8, .9, 1.2), smoothstep(.5, 1., vUv.y)); // ضلمة المية من فوق
+      float glow = exp(-distance(vUv, vec2(.552, .583)) * 55.);       // العين بتنوّر
+      float flick = .55 + .45 * sin(uTime * 7.);
+      col += vec3(1., .12, .08) * glow * (.5 + uPulse * 2.2) * (.7 + .3 * flick);
+      float a = max(c.a, glow * .8) * uOpacity;
+      gl_FragColor = vec4(col, a);
+    }`;
+
+  const tex = new THREE.TextureLoader().load(DATA.whaleImg, () => { window.__w3d = true; document.body.classList.add("w3d"); });
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const geo = new THREE.PlaneGeometry(1, 1, 56, 56);
+  const mk = (seed, dark) => new THREE.ShaderMaterial({ uniforms: { map: { value: tex }, uTime, uPulse, uSeed: { value: seed }, uOpacity: { value: 0 }, uDark: { value: dark } }, vertexShader: vert, fragmentShader: frag, transparent: true, depthWrite: false });
+  const bigM = mk(0, 1), calfM = mk(2.3, .75);
+  const big = new THREE.Mesh(geo, bigM), calf = new THREE.Mesh(geo, calfM);
+  scene.add(calf, big);
+
+  // ثلج البحر العميق (جزيئات بتنزل ببطء) = جو مرعب
+  const N = 130, pts = new Float32Array(N * 3), sp = [];
+  for (let i = 0; i < N; i++) { pts[i * 3] = Math.random() * 2 - 1; pts[i * 3 + 1] = Math.random() * 2 - 1; sp.push(.02 + Math.random() * .05); }
+  const pg = new THREE.BufferGeometry(); pg.setAttribute("position", new THREE.BufferAttribute(pts, 3));
+  const snow = new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xaee9ff, size: 2.6, sizeAttenuation: false, transparent: true, opacity: .4, depthWrite: false }));
+  scene.add(snow);
+
+  let W = 1, H = 1, S = 300;
+  const resize = () => {
+    W = layer.clientWidth || 1; H = layer.clientHeight || 1; S = Math.min(W * .86, H * .8);
+    renderer.setSize(W, H, false);
+    camera.left = -W / 2; camera.right = W / 2; camera.top = H / 2; camera.bottom = -H / 2; camera.updateProjectionMatrix();
+    snow.scale.set(W / 2, H / 2, 1);
+  };
+  new ResizeObserver(resize).observe(layer); resize();
+  let visible = true; new IntersectionObserver((e) => { visible = e[0].isIntersecting; }, { threshold: 0 }).observe(hero);
+
+  const DUR = 10.5, CALF_DELAY = 1.4; let passAt = -1e9, pulse = 0, last = performance.now() / 1000;
+  const sm = THREE.MathUtils.smoothstep;
+  const place = (m, mat, p, size, y, op) => {
+    m.visible = p > 0 && p < 1; if (!m.visible) return;
+    m.scale.set(size, size, 1);
+    m.position.set(THREE.MathUtils.lerp(-W / 2 - size * .6, W / 2 + size * .6, p), y + Math.sin(p * Math.PI * 2) * H * .02, 0);
+    m.rotation.z = -0.06 + Math.sin(p * 5) * 0.03;
+    mat.uniforms.uOpacity.value = sm(p, 0, .12) * (1 - sm(p, .88, 1)) * op;
+  };
+  function frame() {
+    requestAnimationFrame(frame);
+    if (!visible || document.hidden) return;
+    const now = performance.now() / 1000; uTime.value += now - last; last = now;
+    pulse *= .975; uPulse.value = pulse;
+    const t = now - passAt;
+    place(big, bigM, t / DUR, S, H * .1, .95);
+    place(calf, calfM, (t - CALF_DELAY) / DUR, S * .38, -H * .22, .5);
+    const pa = pg.attributes.position;
+    for (let i = 0; i < N; i++) { let y = pa.getY(i) - sp[i] * .004; if (y < -1) y = 1; pa.setY(i, y); pa.setX(i, pa.getX(i) + Math.sin(uTime.value * .6 + i) * .0003); }
+    pa.needsUpdate = true;
+    renderer.render(scene, camera);
+  }
+  frame();
+  addEventListener("whale-pass", () => { passAt = performance.now() / 1000; });
+  addEventListener("whale-call", () => { pulse = 1; });
+}
+</script>
+</body>
+</html>

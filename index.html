@@ -313,6 +313,15 @@
     .portrait { height: 64%; }
     .stack { --step: 46px; transform: scale(.85); transform-origin: right top; }
   }
+  /* كمبيوتر: "حوت الميديا" في سطر واحد فوق، والصورة تحتهم، والهيرو أطول وأوسع */
+  @media (min-width: 901px) {
+    .hero { height: calc(100vh - 30px); min-height: 660px; }
+    .hero-name { display: flex; justify-content: center; align-items: flex-start; gap: .26em; padding-top: 5.5vh; font-size: clamp(56px, 8vw, 150px); }
+    .hero-name .n1, .hero-name .n2 { position: static; }
+    .portrait { height: 74%; }
+    .cta { bottom: 9%; }
+    .bento { margin-top: 14px; gap: 14px; }
+  }
   @media (pointer: coarse) { .glow { display: none; } }
   @media (prefers-reduced-motion: reduce) {
     .ico3d::before, .pbtn.ringing, .band .track, .bubbles i, .stack .app, .hero-name .n2 span { animation: none; }

@@ -39,6 +39,8 @@
   .loader .enter:hover { filter: brightness(1.1); }
   .loader .bar i { display: block; height: 100%; width: 100%; background: var(--grad); transform-origin: right; transform: scaleX(0); }
 
+  .soundhint { position: fixed; bottom: 18px; left: 50%; translate: -50% 0; z-index: 150; padding: 10px 20px; border-radius: 999px; background: rgba(7,13,31,.88); color: #fff; font: 700 13px "Cairo", sans-serif; border: 1px solid rgba(0,212,255,.5); backdrop-filter: blur(10px); pointer-events: none; animation: bob 2.4s ease-in-out infinite; transition: opacity .5s; }
+  .soundhint.gone { opacity: 0; }
   .progress { position: fixed; top: 0; right: 0; left: 0; height: 3px; z-index: 300; background: var(--grad); transform-origin: right; transform: scaleX(0); pointer-events: none; }
   .glow { position: fixed; top: 0; left: 0; width: 420px; height: 420px; margin: -210px 0 0 -210px; z-index: 40; pointer-events: none; border-radius: 50%;
     background: radial-gradient(circle, rgba(0,212,255,.16), rgba(255,46,147,.1) 45%, transparent 70%); will-change: transform; opacity: 0; transition: opacity .4s; }
@@ -336,8 +338,9 @@
 </head>
 <body>
 
-<div class="loader" id="loader"><div class="in"><img src="logo.svg" alt="" /><div class="bar"><i></i></div><button class="enter" id="enter" type="button">ادخل عالم الحوت 🔊</button></div></div>
+<div class="loader" id="loader"><div class="in"><img src="logo.svg" alt="" /><div class="bar"><i></i></div></div></div>
 <div class="progress" id="progress"></div>
+<div class="soundhint" id="soundHint">🔊 دوس في أي مكان والصوت يشتغل</div>
 <div class="glow" id="glow"></div>
 
 <script src="data.js"></script>
@@ -865,21 +868,16 @@ const marks = [...qs.children];
 // عدّاد العملاء
 const countTo = (el, n) => { const o = { v: 0 }; gsap.to(o, { v: n, duration: 1.6, ease: "power2.out", onUpdate: () => el.textContent = Math.round(o.v) }); };
 
-// الـ loader = بوابة دخول: الضغطة بتفتح الصوت، والزمارة تشتغل أول ما يفتح الموقع
+// الـ loader: بيدخل لوحده من غير أي ضغطة
 let startShow = () => {};
 if (reduced || ADMIN) $("#loader").remove(); else {
-  const l = gsap.timeline();
+  const l = gsap.timeline({ onComplete: () => $("#loader")?.remove() });
   l.from("#loader img", { scale: .4, opacity: 0, duration: .6, ease: "back.out(2)" })
    .to("#loader .bar i", { scaleX: 1, duration: .9, ease: "power2.inOut" }, "<.1")
-   .to("#enter", { opacity: 1, y: 0, pointerEvents: "auto", duration: .5 });
-  let entered = false;
-  const enter = () => {
-    if (entered) return; entered = true;
-    gsap.timeline().to("#loader .in", { scale: .8, opacity: 0, duration: .35 })
-      .to("#loader", { yPercent: -100, duration: .8, ease: "expo.inOut", onComplete: () => $("#loader")?.remove() }, "-=.1");
-    startShow();
-  };
-  $("#enter").addEventListener("click", enter);
+   .to("#loader .in", { scale: .8, opacity: 0, duration: .3 })
+   .to("#loader", { yPercent: -100, duration: .8, ease: "expo.inOut" }, "-=.1")
+   .call(() => startShow(), null, "-=.55");
+  setTimeout(() => { $("#loader")?.remove(); startShow(); }, 6000); // أمان
 }
 
 if (!reduced) {
@@ -898,13 +896,18 @@ if (!reduced) {
     hb.to(".abyss", { opacity: 0, duration: 2.4 }, 8);
   };
   addEventListener("whale-pass", () => { setTimeout(() => Sound.horn(), 250); setTimeout(callWhale, 3600); });
+  let started = false;
   startShow = () => {
+    if (started) return; started = true;
     $("#hero").classList.add("go");
     gsap.from("#heroName > span > span", { yPercent: 120, opacity: 0, duration: 1.2, ease: "expo.out", stagger: 0.15, delay: .5 });
     gsap.from("#portrait", { yPercent: 18, opacity: 0, duration: 1.5, ease: "expo.out", delay: .5 });
     gsap.from(".cta", { y: 30, opacity: 0, duration: 1, delay: 1.1, ease: "expo.out" });
     const pass = () => dispatchEvent(new Event("whale-pass")); pass(); setInterval(pass, 32000);
   };
+  // المتصفح مابيسمحش بصوت قبل أول ضغطة/لمسة، فأول ما تحصل الزمارة تشتغل فورًا والحوت يعدّي من الأول
+  const hint = $("#soundHint"); if (ADMIN) hint?.remove();
+  Sound.onUnlock(() => { hint?.classList.add("gone"); if (!ADMIN) dispatchEvent(new Event("whale-pass")); });
   ScrollTrigger.create({ trigger: "#hero", start: "top top", end: "bottom 30%", onLeave: () => Sound.setOcean(0, 1.4), onEnterBack: () => Sound.setOcean(.38, 1.4) });
   // شريط التقدم
   ScrollTrigger.create({ start: 0, end: "max", onUpdate: s => $("#progress").style.transform = `scaleX(${s.progress})` });
